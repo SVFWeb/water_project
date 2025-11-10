@@ -126,39 +126,6 @@
             </view>
           </view>
         </view>
-        <view class="WaterLocation-card">
-          <view class="WaterLocation-card-title">广西民族大学武鸣校区加水站</view>
-          <view class="WaterLocation-card-subtitle">武鸣区发展大道1号109-1教室中</view>
-          <view class="WaterLocation-card-price-box">
-            <text class="WaterLocation-card-price">3.99/</text>
-            <view class="WaterLocation-card-km">
-              <text>0.1km</text>
-              <image src="/image/plane.png" mode=""/>
-            </view>
-          </view>
-        </view>
-        <view class="WaterLocation-card">
-          <view class="WaterLocation-card-title">广西民族大学武鸣校区加水站</view>
-          <view class="WaterLocation-card-subtitle">武鸣区发展大道1号109-1教室中</view>
-          <view class="WaterLocation-card-price-box">
-            <text class="WaterLocation-card-price">3.99/</text>
-            <view class="WaterLocation-card-km">
-              <text>0.1km</text>
-              <image src="/image/plane.png" mode=""/>
-            </view>
-          </view>
-        </view>
-        <view class="WaterLocation-card">
-          <view class="WaterLocation-card-title">广西民族大学武鸣校区加水站</view>
-          <view class="WaterLocation-card-subtitle">武鸣区发展大道1号109-1教室中</view>
-          <view class="WaterLocation-card-price-box">
-            <text class="WaterLocation-card-price">3.99/</text>
-            <view class="WaterLocation-card-km">
-              <text>0.1km</text>
-              <image src="/image/plane.png" mode=""/>
-            </view>
-          </view>
-        </view>
         <view class="WaterLocation-card-end">
         </view>
       </scroll-view>
