@@ -1,0 +1,48 @@
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 8080
+
+# MyBatis配置
+#mybatis-plus:
+#  # 搜索指定包别名
+#  typeAliasesPackage: com.**.domain
+#  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+#  mapperLocations: classpath*:mapper/**/*Mapper.xml
+#  # 加载全局的配置文件
+#  configLocation: classpath:mybatis/mybatis-config.xml
+
+  # 数据源配置
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wether?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+
+#mtqq配置  subTopic:lamp/line
+  mqtt:
+    username: ""
+    password: ""
+    url: tcp://broker.emqx.io:1883
+    subClientId: springboot_client_${random.uuid}
+    subTopic: lamp/line
+    pubClientId: springboot_pub_${random.uuid}
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+
+# 固定设备ID配置
+fixed:
+  machine:
+    id: "ma1"  # 替换为您想要的固定设备ID
