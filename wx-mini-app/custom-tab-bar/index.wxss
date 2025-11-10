@@ -1,0 +1,56 @@
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100rpx; /* 假设高度为100rpx */
+  background: white;
+  display: flex;
+  padding-bottom: env(safe-area-inset-bottom); /* 适配安全区域 */
+}
+
+.tab-bar-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-bar-scan {
+  position: relative;
+  top: -35rpx; /* 向上移动，使其凸起 */
+  width: 130rpx; /* 固定宽度，圆形 */
+  height: 130rpx; /* 固定高度，圆形 */
+  border-radius: 50%; /* 圆形 */
+  background: white; /* 背景色与tab-bar一致 */
+  z-index: 1; /* 确保在上层 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 如果需要阴影效果 */
+.tab-bar-scan {
+  box-shadow: 0 -2rpx 10rpx rgba(0,0,0,0.1);
+}
+
+.tab-bar-item-image {
+  width: 50rpx;
+  height: 50rpx;
+}
+
+.tab-bar-scan .tab-bar-item-image {
+  width: 50rpx;
+  height: 50rpx;
+}
+
+.tab-bar-item-view {
+  font-size: 28rpx;
+  margin-top: 4rpx;
+}
+
+.tab-bar-scan .tab-bar-item-view {
+  margin-top: 0; /* 扫码项可能不需要文字，如果需要文字，可以调整 */
+}
