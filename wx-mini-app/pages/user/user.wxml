@@ -1,2 +1,16 @@
-<!--pages/user/user.wxml-->
-<text>pages/user/user.wxml</text>
+<!-- 头像且信息显示 -->
+<view class="userBgBox">
+  <view class="userInfoBox">
+    <image src="/image/userDefault.jpeg" mode="scaleToFill"/>
+    <view class="userInfo-name-phone-more-box">
+      <view class="userInfo-name-phone">
+        <text class="userInfo-name">被风吹过的夏天</text>
+        <view class="userInfo-phone">
+          <image src="/image/phone.png" mode=""/>
+          <text>135****6373</text>
+        </view>
+      </view>
+      <image src="/image/more-white.png" mode="scaleToFill"/>
+    </view>
+  </view>
+</view>

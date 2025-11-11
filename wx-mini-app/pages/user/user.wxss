@@ -1,1 +1,51 @@
 /* pages/user/user.wxss */
+.userBgBox{
+  padding: 200rpx 20rpx 100rpx 20rpx;
+  background-color: #1296db;
+}
+.userInfoBox{
+  display: flex;
+  align-items: center;
+}
+.userInfoBox>image{
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 50%;
+  box-shadow: 0 10rpx 10rpx 0 rgba(0, 0, 0, 0.05);
+}
+.userInfo-name-phone-more-box{
+  width: 70vw;
+  height: 140rpx;
+  padding-left: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.userInfo-name-phone-more-box>image{
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+  box-shadow: 0 10rpx 10rpx 0 rgba(0, 0, 0, 0.05);
+}
+.userInfo-name-phone{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.userInfo-name{
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+.userInfo-phone{
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+.userInfo-phone>image{
+  width: 40rpx;
+  height: 40rpx;
+}
