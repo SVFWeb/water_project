@@ -13,4 +13,62 @@
       <image src="/image/more-white.png" mode="scaleToFill"/>
     </view>
   </view>
+  <view class="BalanceTopUp-box">
+    <image src="/image/money.png" mode="scaleToFill"/>
+    <view class="BalanceTopUp-title-box">
+      <text class="BalanceTopUp-title">缴费去充值余额</text>
+      <text class="BalanceTopUp-subtitle">大额优惠享多多，福利活动点击</text>
+    </view>
+    <view class="BalanceTopUp-btn">
+      <text>立即缴费</text>
+    </view>
+  </view>
+</view>
+<!-- 多功能菜单 -->
+<view class="userMenuBox">
+  <view class="record-box">
+    <view class="transaction-record">
+      <text class="record-title">交易记录</text>
+      <text class="record-subtitle">查看每一笔订单</text>
+    </view>
+    <view class="payment-record">
+      <text class="record-title">缴费记录</text>
+      <text class="record-subtitle">查看每一笔充值</text>
+    </view>
+  </view>
+  <view class="user-menu">
+    <view class="user-menu-icon">
+      <image src="/image/opinion.png" mode=""/>
+      <text>意见反馈</text>
+    </view>
+    <image src="/image/more-8a.png" mode=""/>
+  </view>
+  <view class="user-menu">
+    <view class="user-menu-icon">
+      <image src="/image/anquan.png" mode=""/>
+      <text>账号安全</text>
+    </view>
+    <image src="/image/more-8a.png" mode=""/>
+  </view>
+  <view class="user-menu">
+    <view class="user-menu-icon">
+      <image src="/image/team.png" mode=""/>
+      <text>关于我们</text>
+    </view>
+    <image src="/image/more-8a.png" mode=""/>
+  </view>
+  <view class="user-menu">
+    <view class="user-menu-icon">
+      <image src="/image/lianxi.png" mode=""/>
+      <text>联系客服</text>
+    </view>
+    <image src="/image/more-8a.png" mode=""/>
+  </view>
+  <view class="user-menu">
+    <view class="user-menu-icon">
+      <image src="/image/dele.png" mode=""/>
+      <text>清除缓存</text>
+    </view>
+    <image src="/image/more-8a.png" mode=""/>
+  </view>
 </view>
