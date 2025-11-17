@@ -50,6 +50,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import Table from '@/components/table/index.vue'
+import { apiGetTransactionRecord } from '@/api/transaction/record'
  //import { Page } from '@/components/table/type'
 // import { ElMessage } from 'element-plus'
 import {  Search, Delete } from '@element-plus/icons'
@@ -64,7 +65,7 @@ const query = reactive({
 // 分页参数, 供table使用
 const page = reactive({
   index: 1,
-  size: 20,
+  size: 10,
   total: 0
 })
 // 表格加载状态
@@ -72,6 +73,14 @@ const loading = ref(true)
 // 选择删除的数据
 const chooseData = ref([])
 
+async function getTransactionRecord() {
+  const res = await apiGetTransactionRecord({
+    page: page.index,
+    pageSize: page.size,
+  })
+  
+  console.log(res);
+}
 
 // 删除数据
 const handleSelectionChange = (val) => {
@@ -90,6 +99,7 @@ const handleDel = (data) => {
 
 // 初始化数据
 onMounted(() => {
+  getTransactionRecord()
   getTableData()
 })
 </script>
