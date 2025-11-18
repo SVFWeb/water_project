@@ -1,32 +1,17 @@
-// pages/watering/watering.js
+// pages/machine/machine.js
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    // 纬度
-    latitude:23.188121,
-    // 经度
-    longitude:108.147359,
-    posname:"学校",
-    posaddress:"109-2教室",
-    // 默认
-    markers:[{
-    latitude:23.188121,
-    longitude:108.147359,
-    id:0,
-    // 图标路径
-    iconPath:"",
-    width:30,
-    height:40,
-    }]
+
   },
-// 跳转到机器页面
-  GoToMachine(e){
-    wx.navigateTo({
-      url: '../machine/machine',
-    })
+  // 返回上一页
+  backTab(){
+    wx.navigateBack({
+      delta: 1
+    });
   },
   /**
    * 生命周期函数--监听页面加载
@@ -46,9 +31,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-      this.getTabBar().updateSelected();
-    }
+
   },
 
   /**

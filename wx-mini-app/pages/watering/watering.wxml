@@ -1,2 +1,59 @@
-<!--pages/watering/watering.wxml-->
-<text>pages/watering/watering.wxml</text>
+<view class="waterMapBox">
+  <map longitude="{{longitude}}" latitude="{{latitude}}" markers="{{ markers}}" class="waterMap">
+  </map>
+  <view class="mapTopShowDown">
+  </view>
+  <view class="mapSearchLocationBox">
+    <view class="ThisLocation">
+      <text>南宁市▼</text>
+    </view>
+    <view class="mapSearchBox">
+      <input type="search" name="mapSearch" id="" placeholder="搜索目的/地加水站"/>
+      <image src="/image/search-blue.png" mode=""/>
+    </view>
+  </view>
+  <view class="bottomFunctionBox">
+    <view class="bottomFunction-one-box">
+      <text>距离最近▼</text>
+      <text>加水站▼</text>
+      <text>快充慢充▼</text>
+      <text>筛选▼</text>
+    </view>
+    <view class="bottomFunction-two-box">
+      <text>优惠站点</text>
+      <text>免费停车</text>
+      <text>货车常用</text>
+      <text>vip站点</text>
+      <text>快速稳定</text>
+    </view>
+  </view>
+</view>
+<view class="waterMachineCardBox">
+  <view class="waterMachineCard">
+    <view class="waterMachineCard-title">
+      <text>广西民族大学加水站1号机</text>
+      <view class="waterMachineCard-title-location">
+        <image src="/image/plane.png" mode=""/>
+        <text>0.1km</text>
+      </view>
+    </view>
+    <view class="waterMachineCard-middle">
+      <image src="/image/water-bg2.jpeg" mode="scaleToFill"/>
+      <view class="waterMachineCard-middle-priceBox">
+        <text class="waterMachineCard-middle-price">3.99</text>
+        <view class="waterMachineCard-middle-price-idle">
+          <image src="/image/shuidi.png" mode=""/>
+          <text>空闲 0/1</text>
+        </view>
+      </view>
+      <view class="waterMachineCard-middle-btnBox">
+        <text bind:tap="GoToMachine">去加水</text>
+      </view>
+    </view>
+    <view class="waterMachineCard-bottom">
+      <image src="/image/P.png" mode=""/>
+      <text>限时免费停车：2小时内，超过时间通过计时收费...</text>
+    </view>
+  </view>
+
+</view>

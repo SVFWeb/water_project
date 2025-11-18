@@ -1,0 +1,79 @@
+<view class="machineTopBox">
+  <image src="/image/back.png" mode="scaleToFill" bind:tap="backTab" class="machineBack"/>
+  <view class="machineTop-titleBox">
+    <view class="machineTop-title">
+      <text>广西民族大学武鸣校区加水站</text>
+      <view class="machineTop-title-number">
+        <text class="machineTop-title-number-one">加水机:</text>
+        <text class="machineTop-title-number-two">001号</text>
+      </view>
+    </view>
+    <image src="/image/water-bg.png" mode=""/>
+  </view>
+</view>
+<view class="machineInfoBox">
+  <view class="machineInfo-titleBox">
+    <text>加水价格:</text>
+    <view class="machineInfo-water-priceBox">
+      <text class="machineInfo-water-price-one">0.27</text>
+      <text class="machineInfo-water-price-two">水费0.004元/升，服务费0.266元/升</text>
+    </view>
+  </view>
+  <view class="machineInfo-userbalanceBox">
+    <view class="machineInfo-userbalance">
+      <image src="/image/user-balance.png" mode="scaleToFill"/>
+      <view class="machineInfo-userbalance-title">
+        <text class="machineInfo-userbalance-title-one">当前余额</text>
+        <text class="machineInfo-userbalance-title-two">100</text>
+      </view>
+    </view>
+    <view class="machineInfo-userbalance">
+      <image src="/image/shuidi.png" mode="scaleToFill"/>
+      <view class="machineInfo-userbalance-title">
+        <text class="machineInfo-userbalance-title-one">可加水升数</text>
+        <text class="machineInfo-userbalance-title-two-water">100</text>
+      </view>
+    </view>
+  </view>
+  <view class="machineInfo-detailsBox">
+    <view class="machineInfo-details-title">
+      <text>机器详情</text>
+    </view>
+    <view class="machineInfo-details-contentBox">
+      <view class="machineInfo-details-content">
+        <image src="/image/id.png" mode=""/>
+        <text>设备编号</text>
+      </view>
+      <text>65198465165</text>
+    </view>
+    <view class="machineInfo-details-contentBox">
+      <view class="machineInfo-details-content">
+        <image src="/image/id.png" mode=""/>
+        <text>设备名称</text>
+      </view>
+      <text>初号机</text>
+    </view>
+    <view class="machineInfo-details-contentBox">
+      <view class="machineInfo-details-content">
+        <image src="/image/id.png" mode=""/>
+        <text>出水功率</text>
+      </view>
+      <text>30升/分钟</text>
+    </view>
+    <view class="machineInfo-details-contentBox">
+      <view class="machineInfo-details-content">
+        <image src="/image/id.png" mode=""/>
+        <text>水管长度</text>
+      </view>
+      <text>18米</text>
+    </view>
+  </view>
+  <view class="machineInfo-connectBox">
+    <image src="/image/lianjie.png" mode=""/>
+    <text class="machineInfo-connect-text-one">设备连接状态：</text>
+    <text class="machineInfo-connect-text-two">未连接</text>
+  </view>
+  <view class="machineStartIngBox">
+    <text>点击连接设备</text>
+  </view>
+</view>

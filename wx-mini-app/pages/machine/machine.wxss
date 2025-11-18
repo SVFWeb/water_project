@@ -1,0 +1,206 @@
+.machineTopBox{
+  padding: 100rpx 20rpx 20rpx 20rpx ;
+  background: linear-gradient(-180deg, #1296db, #9ad9fc);
+}
+.machineBack{
+  width: 50rpx;
+  height: 50rpx;
+}
+.machineTop-titleBox{
+  display: flex;
+  justify-content: space-between;
+}
+.machineTop-titleBox>image{
+  width: 400rpx;
+  height: 250rpx;
+}
+.machineTop-title{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.machineTop-title>text{
+  font-size: 44rpx;
+  font-weight: bolder;
+  letter-spacing: 2rpx;
+  line-height: 1.6;
+  color: #2c2c2c;
+}
+.machineTop-title-number-one{
+  padding: 10rpx 15rpx;
+  background-color: #ffffff85;
+  border-radius: 15rpx;
+  font-size: 24rpx;
+  font-weight: bold;
+  margin-right: 10rpx;
+  color: #515151;
+}
+.machineTop-title-number-two{
+  font-size: 32rpx;
+  font-weight: bolder;
+  color: #1296db;
+}
+.machineInfoBox{
+  padding: 20rpx;
+  background-color: #f7f7f7;
+  height: 100vh;
+}
+.machineInfo-titleBox{
+  padding: 20rpx 30rpx;
+  background-color: #ffffff;
+  border-radius: 15rpx;
+  box-shadow: 0 0 3px 10px rgba(rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), 0.7);
+}
+.machineInfo-titleBox>text{
+  font-size: 28rpx;
+  color: #515151;
+}
+.machineInfo-water-priceBox{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15rpx;
+  align-items: center;
+}
+.machineInfo-water-price-one{
+  font-size: 44rpx;
+  font-weight: bolder;
+  color: #1296db;
+}
+.machineInfo-water-price-one::after{
+  content: "元/升";
+  font-size: 24rpx;
+  font-weight: bolder;
+  color: #1296db;
+}
+.machineInfo-water-price-two{
+  font-size: 28rpx;
+  color: #515151;
+}
+.machineInfo-userbalanceBox{
+  margin: 20rpx 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.machineInfo-userbalance{
+  display: flex;
+  align-items: center;
+  width: 300rpx;
+  height: 120rpx;
+  background-color: #ffffff;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 0 3px 10px rgba(rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), 0.7);
+}
+.machineInfo-userbalance>image{
+  width: 70rpx;
+  height: 70rpx;
+}
+.machineInfo-userbalance-title{
+  display: flex;
+  flex-direction: column;
+  margin-left: 15rpx;
+}
+.machineInfo-userbalance-title-one{
+  font-size: 28rpx;
+  color: #515151;
+}
+.machineInfo-userbalance-title-two{
+  font-size: 32rpx;
+  font-weight: bolder;
+}
+.machineInfo-userbalance-title-two-water{
+  font-size: 32rpx;
+  font-weight: bolder;
+}
+.machineInfo-userbalance-title-two::after{
+  content: "元";
+  font-size: 24rpx;
+  font-weight: bolder;
+}
+.machineInfo-userbalance-title-two-water::after{
+  content: "升";
+  font-size: 24rpx;
+  font-weight: bolder;
+}
+.machineInfo-connectBox{
+  margin-top: 20rpx;
+  padding: 20rpx;
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 15rpx;
+}
+.machineInfo-connectBox>image{
+  width: 30rpx;
+  height: 30rpx;
+  margin-right: 20rpx;
+}
+.machineInfo-connect-text-one{
+  color: #2c2c2c;
+  font-size: 28rpx;
+}
+.machineInfo-connect-text-two{
+  color: #2c2c2c;
+  font-size: 28rpx;
+}
+.machineInfo-connect-text-two::before{
+  content: "◉";
+  color: #db1212;
+  font-size: 28rpx;
+}
+.machineInfo-detailsBox{
+  padding: 30rpx;
+  background-color: #ffffff;
+  border-radius: 15rpx;
+  box-shadow: 0 0 3px 10px rgba(rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), 0.7);
+}
+.machineInfo-details-title{
+  font-size: 28rpx;
+  font-weight: bolder;
+  color: #2c2c2c;
+}
+.machineInfo-details-contentBox{
+  margin-top: 20rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.machineInfo-details-contentBox>text{
+  font-size: 28rpx;
+  color: #2c2c2c;
+  font-weight: bolder;
+}
+.machineInfo-details-content{
+  display: flex;
+  align-items: center;
+}
+.machineInfo-details-content>image{
+  width: 40rpx;
+  height: 40rpx;
+}
+.machineInfo-details-content>text{
+  margin-left: 20rpx;
+  font-size: 28rpx;
+  color: #2c2c2c;
+}
+.machineStartIngBox{
+  margin-top: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.machineStartIngBox>text{
+  width: 200rpx;
+  height: 200rpx;
+  background: linear-gradient(180deg, #1296db, #9ad9fc);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 32rpx;
+  color: #ffffff;
+  font-weight: bolder;
+  box-shadow: 0 0 3px 10px rgba(rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), 0.7);
+  border: 5px solid #ffffff;
+}

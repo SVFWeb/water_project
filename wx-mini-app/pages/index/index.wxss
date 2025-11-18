@@ -23,7 +23,7 @@
 .BalanceCard{
   position: relative; 
   height: 300rpx;
-  padding: 20rpx 20rpx 30rpx 20rpx;
+  padding: 20rpx 0rpx 30rpx 0rpx;
   z-index: 5;
 }
 .BalanceCard-image{

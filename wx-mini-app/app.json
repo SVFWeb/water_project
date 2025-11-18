@@ -4,7 +4,8 @@
     "pages/logs/logs",
     "pages/watering/watering",
     "pages/order/order",
-    "pages/user/user"
+    "pages/user/user",
+    "pages/machine/machine"
   ],
   "window": {
     "navigationStyle": "custom"
