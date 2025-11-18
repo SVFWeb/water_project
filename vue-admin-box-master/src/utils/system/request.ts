@@ -3,6 +3,7 @@ import store from '@/store'
 import { ElMessage } from 'element-plus'
 const baseURL: any = import.meta.env.VITE_BASE_URL
 
+
 const service: AxiosInstance = axios.create({
   baseURL: baseURL,
   timeout: 5000
@@ -26,12 +27,13 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     const res = response.data
-    if (res.code === 200) {
-      return res
-    } else {
-      showError(res)
-      return Promise.reject(res)
-    }
+    // if (res.code === 200) {
+    //   return res
+    // } else {
+    //   showError(res)
+    //   return Promise.reject(res)
+    // }
+    return res
   },
   (error: AxiosError)=> {
     console.log(error) // for debug
