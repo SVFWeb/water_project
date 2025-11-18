@@ -1,1 +1,182 @@
-/* pages/watering/watering.wxss */
+.waterMapBox{
+  position: relative;
+  height: 800rpx;
+}
+.waterMap{
+  position: absolute;
+  width: 100%;
+  height: 800rpx;
+  z-index: 2;
+}
+.mapTopShowDown{
+  position: absolute;
+  width: 100vw;
+  height: 250rpx;
+  background: linear-gradient(180deg, #00000046, #00000000);
+  z-index: 99;
+}
+.mapSearchLocationBox{
+  width: 95%;
+  position: absolute;
+  z-index: 99;
+  top: 150rpx;
+  padding: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.ThisLocation{
+  font-size: 28rpx;
+  font-weight: bold;
+}
+.mapSearchBox{
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mapSearchBox>input{
+  width: 65vw;
+  height: 50rpx;
+  padding: 10rpx 10rpx 10rpx 30rpx;
+  background-color: white;
+  border-radius: 50rpx;
+  font-size: 28rpx;
+}
+.mapSearchBox>image{
+  position: absolute;
+  width: 50rpx;
+  height: 50rpx;
+  right: 20rpx;
+}
+.bottomFunctionBox{
+  position: absolute;
+  width: 100%;
+  height: 200rpx;
+  background-color: rgb(255, 255, 255);
+  z-index: 99;
+  top: 750rpx;
+  border-radius: 50rpx 50rpx 0 0 ;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.bottomFunction-one-box{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-top: 20rpx;
+  color: #515151;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+.bottomFunction-two-box{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-top: 30rpx;
+  font-size: 28rpx;
+}
+.bottomFunction-two-box>text{
+  padding: 20rpx;
+  font-size: 24rpx;
+  background-color: #f7f7f7;
+  border-radius: 15rpx;
+}
+.waterMachineCardBox{
+  padding: 150rpx 20rpx 200rpx 20rpx;
+  background-color: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+}
+.waterMachineCard{
+  margin-top: 20rpx;
+  padding: 20rpx;
+  background-color: rgb(255, 255, 255);
+  border-radius: 30rpx;
+  box-shadow: 0 2rpx 10rpx 0 rgba(0,0,0,0.05);
+}
+.waterMachineCard-title{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.waterMachineCard-title>text{
+  font-weight: bold;
+  font-size: 28rpx;
+}
+.waterMachineCard-title-location{
+  display: flex;
+  align-items: center;
+  color: #515151;
+}
+.waterMachineCard-title-location>image{
+  width: 30rpx;
+  height: 30rpx;
+  margin-right:15rpx;
+}
+.waterMachineCard-middle{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15rpx;
+}
+.waterMachineCard-middle>image{
+  width: 250rpx;
+  height: 150rpx;
+  border-radius: 20rpx;
+}
+.waterMachineCard-middle-priceBox{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.waterMachineCard-middle-price-idle{
+  display: flex;
+  align-items: center;
+}
+.waterMachineCard-middle-price-idle>text{
+  font-size: 28rpx;
+}
+.waterMachineCard-middle-price{
+  font-size: 32rpx;
+  color: #1296db;
+  font-weight: bolder;
+}
+.waterMachineCard-middle-price::after{
+  content: "元/升";
+  font-size: 24rpx;
+  color: #1296db;
+  font-weight: bolder;
+}
+.waterMachineCard-middle-price-idle>image{
+  width: 30rpx;
+  height: 30rpx;
+  margin-right: 5rpx;
+}
+.waterMachineCard-middle-btnBox{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.waterMachineCard-middle-btnBox>text{
+  font-size: 28rpx;
+  font-weight: bolder;
+  color: #1296db;
+  background-color: #aedcf5b6;
+  padding: 15rpx 20rpx 15rpx 20rpx;
+  border-radius: 15rpx;
+}
+.waterMachineCard-bottom>image{
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 15rpx;
+}
+.waterMachineCard-bottom{
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #707070;
+  margin-top: 15rpx;
+}
