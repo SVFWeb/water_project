@@ -141,6 +141,7 @@ const getTableData = () => {
 
 // 删除功能
 const handleDel = (data) => {
+  console.log(data);
   
 }
 
