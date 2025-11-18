@@ -27,12 +27,13 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     const res = response.data
-    if (res.code === 200) {
-      return res
-    } else {
-      showError(res)
-      return Promise.reject(res)
-    }
+    // if (res.code === 200) {
+    //   return res
+    // } else {
+    //   showError(res)
+    //   return Promise.reject(res)
+    // }
+    return res
   },
   (error: AxiosError)=> {
     console.log(error) // for debug
