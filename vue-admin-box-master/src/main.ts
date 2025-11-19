@@ -1,7 +1,3 @@
-/*
- * @Date: 2022-05-22 20:44:25
- * @Description: 
- */
 import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import { baidu } from './utils/system/statistics'
@@ -15,6 +11,7 @@ import store from './store'
 import router from './router'
 import { getAuthRoutes } from './router/permission'
 import i18n from './locale'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 if (import.meta.env.MODE !== 'development') { // 非开发环境调用百度统计
   baidu()
 }
@@ -22,6 +19,9 @@ if (import.meta.env.MODE !== 'development') { // 非开发环境调用百度统�
 /** 权限路由处理主方法 */
 getAuthRoutes().then(() => {
   const app = createApp(App)
+  for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+  }
   app.use(ElementPlus, { size: store.state.app.elementSize })
   app.use(store)
   app.use(router)

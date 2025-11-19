@@ -19,7 +19,7 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/wether?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
     username: root
-    password: s20031115s
+    password: 123456
 
 #mtqq配置  subTopic:lamp/line
   mqtt:

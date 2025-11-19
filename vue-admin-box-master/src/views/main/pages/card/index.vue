@@ -4,7 +4,7 @@
       <div class="box" ref="box">
         <el-scrollbar height="100%">
           <el-row :gutter="20">
-            <el-col :lg="4" :md="8" :sm="12" :xs="24" v-for="row in list" :key="row.id">
+            <el-col :lg="4" :md="8" :sm="10" :xs="24" v-for="row in list" :key="row.id">
               <el-card :body-style="{ padding: '0px' }" shadow="hover">
                 <img :src="row.image" class="image">
                 <div style="padding: 14px;">

@@ -1,173 +1,160 @@
 <template>
   <div class="layout-container">
-    <div class="layout-container-form flex space-between">
-      <div class="layout-container-form-handle">
-        <el-button type="primary" :icon="Plus" @click="handleAdd">{{ $t('message.common.add') }}</el-button>
-        <el-popconfirm :title="$t('message.common.delTip')" @confirm="handleDel(chooseData)">
-          <template #reference>
-            <el-button type="danger" :icon="Delete" :disabled="chooseData.length === 0">{{ $t('message.common.delBat') }}</el-button>
-          </template>
-        </el-popconfirm>
+    <div class="layout-container-table" v-loading="loading">
+      <div class="box" ref="box">
+        <el-scrollbar height="100%">
+          <el-row :gutter="20">
+            <el-col :md="8" v-for="row in 4" :key="row.id">
+              <el-card :body-style="{ padding: '0px' }" shadow="hover">
+                <img src="http://blog.51weblove.com/wp-content/uploads/2019/03/2019032323331541.jpg" class="image">
+                <div style="padding: 14px;">
+                  <span>设备名称</span>
+                  <div class="bottom clearfix">
+                    <div class="online" v-if="true">
+                      <el-icon>
+                        <CircleCheck />
+                      </el-icon>
+                      <span>在线</span>
+                    </div>
+                    <div class="offline" v-else>
+                      <el-icon><WarningFilled /></el-icon>
+                      <span>离线</span>
+                    </div>
+                    <el-button type="text" class="edit-button" @click="showEditor">查看详情</el-button>
+                  </div>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+          <el-empty description="空空如也~" style="height: 500px;" v-show="list.length === 0"></el-empty>
+        </el-scrollbar>
       </div>
-      <div class="layout-container-form-search">
-        <el-input v-model="query.input" :placeholder="$t('message.common.searchTip')" @change="getTableData(true)"></el-input>
-        <el-button type="primary" :icon="Search" class="search-btn" @click="getTableData(true)">{{ $t('message.common.search') }}</el-button>
-      </div>
-    </div>
-    <div class="layout-container-table">
-      <Table
-        ref="table"
-        v-model:page="page"
-        v-loading="loading"
-        :showIndex="true"
-        :showSelection="true"
-        :data="tableData"
-        @getTableData="getTableData"
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column prop="name" label="名称" align="center" />
-        <el-table-column prop="number" label="数字" align="center" />
-        <el-table-column prop="chooseName" label="选择器" align="center" />
-        <el-table-column prop="radioName" label="单选框" align="center" />
-        <el-table-column :label="$t('message.common.handle')" align="center" fixed="right" width="200">
-          <template #default="scope">
-            <el-button @click="handleEdit(scope.row)">{{ $t('message.common.update') }}</el-button>
-            <el-popconfirm :title="$t('message.common.delTip')" @confirm="handleDel([scope.row])">
-              <template #reference>
-                <el-button type="danger">{{ $t('message.common.del') }}</el-button>
-              </template>
-            </el-popconfirm>
-          </template>
-        </el-table-column>
-      </Table>
-      <Layer :layer="layer" @getTableData="getTableData" v-if="layer.show" />
+
+      <el-pagination v-model:current-page="page.index" class="system-page" background
+        layout="total, sizes, prev, pager, next, jumper" :total="page.total" :page-size="page.size"
+        :page-sizes="[10, 20, 50, 100]" @current-change="handleCurrentChange" @size-change="handleSizeChange">
+      </el-pagination>
     </div>
   </div>
 </template>
+<script setup>
+import { ref, reactive, onMounted } from 'vue'
+import { getData } from '@/api/card'
 
-<script lang="ts">
-import { defineComponent, ref, reactive } from 'vue'
-import Table from '@/components/table/index.vue'
-import { Page } from '@/components/table/type'
-import { getData, del } from '@/api/table'
-import Layer from './layer.vue'
-import { ElMessage } from 'element-plus'
-import type { LayerInterface } from '@/components/layer/index.vue'
-import { selectData, radioData } from './enum'
-import { Plus, Search, Delete } from '@element-plus/icons'
-export default defineComponent({
-  name: 'crudTable',
-  components: {
-    Table,
-    Layer
-  },
-  setup() {
-    // 存储搜索用的数据
-    const query = reactive({
-      input: ''
-    })
-    // 弹窗控制器
-    const layer: LayerInterface = reactive({
-      show: false,
-      title: '新增',
-      showButton: true
-    })
-    // 分页参数, 供table使用
-    const page: Page = reactive({
-      index: 1,
-      size: 20,
-      total: 0
-    })
-    const loading = ref(true)
-    const tableData = ref([])
-    const chooseData = ref([])
-    const handleSelectionChange = (val: []) => {
-      chooseData.value = val
-    }
-    // 获取表格数据
-    // params <init> Boolean ，默认为false，用于判断是否需要初始化分页
-    const getTableData = (init: boolean) => {
-      loading.value = true
-      if (init) {
-        page.index = 1
-      }
-      let params = {
-        page: page.index,
-        pageSize: page.size,
-        ...query
-      }
-      getData(params)
-      .then(res => {
-        let data = res.data.list
-        if (Array.isArray(data)) {
-          data.forEach(d => {
-            const select = selectData.find(select => select.value === d.choose)
-            select ? d.chooseName = select.label : d.chooseName = d.choose
-            const radio = radioData.find(select => select.value === d.radio)
-            radio ? d.radioName = radio.label : d.radio
-          })
-        }
-        tableData.value = res.data.list
-        page.total = Number(res.data.pager.total)
-      })
-      .catch(error => {
-        tableData.value = []
-        page.index = 1
-        page.total = 0
-      })
-      .finally(() => {
-        loading.value = false
-      })
-    }
-    // 删除功能
-    const handleDel = (data: object[]) => {
-      let params = {
-        ids: data.map((e:any)=> {
-          return e.id
-        }).join(',')
-      }
-      del(params)
-      .then(res => {
-        ElMessage({
-          type: 'success',
-          message: '删除成功'
-        })
-        getTableData(tableData.value.length === 1 ? true : false)
-      })
-    }
-    // 新增弹窗功能
-    const handleAdd = () => {
-      layer.title = '新增数据'
-      layer.show = true
-      delete layer.row
-    }
-    // 编辑弹窗功能
-    const handleEdit = (row: object) => {
-      layer.title = '编辑数据'
-      layer.row = row
-      layer.show = true
-    }
-    getTableData(true)
-    return {
-      Plus,
-      Search,
-      Delete,
-      query,
-      tableData,
-      chooseData,
-      loading,
-      page,
-      layer,
-      handleSelectionChange,
-      handleAdd,
-      handleEdit,
-      handleDel,
-      getTableData
-    }
+const loading = ref(true)
+const list = ref([])
+const box = ref()
+const page = reactive({
+  index: 1,
+  size: 20,
+  total: 0
+})
+
+const getListData = (init) => {
+  loading.value = true
+  const params = {
+    page: page.index,
+    pageSize: page.size
   }
+  getData(params)
+    .then(res => {
+      page.total = res.data.pager.total
+      list.value = res.data.list
+    })
+    .catch(err => {
+      list.value = []
+      page.index = 1
+      page.total = 0
+    })
+    .finally(() => {
+      loading.value = false
+    })
+}
+
+// 分页相关：监听页码切换事件
+const handleCurrentChange = (val) => {
+  page.index = val
+  getListData(false)
+}
+
+// 分页相关：监听单页显示数量切换事件
+const handleSizeChange = (val) => {
+  page.size = val
+  page.index = 1
+  getListData(false)
+}
+
+const showEditor = () => {
+  // 编辑逻辑
+}
+
+onMounted(() => {
+  box.value.addEventListener('resize', (e) => {
+    console.log(12)
+  })
+  getListData(true)
 })
 </script>
 
 <style lang="scss" scoped>
-  
+* {
+  text-align: left;
+}
+
+.el-col {
+  margin-bottom: 20px;
+}
+
+.box {
+  height: calc(100% - 50px);
+
+  margin-bottom: 15px;
+
+  :deep(.is-horizontal) {
+    display: none;
+  }
+}
+
+.online {
+  span {
+    margin-left: 5px;
+    vertical-align: text-top;
+  }
+  font-size: 13px;
+  color: green;
+}
+
+.offline{
+  span {
+    margin-left: 5px;
+    vertical-align: text-top;
+  }
+  font-size: 13px;
+  color: red;
+}
+
+.bottom {
+  margin-top: 13px;
+  line-height: 12px;
+}
+
+.edit-button {
+  padding: 0;
+  float: right;
+}
+
+.image {
+  width: 100%;
+  display: block;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+
+.clearfix:after {
+  clear: both
+}
 </style>
