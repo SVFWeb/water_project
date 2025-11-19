@@ -87,8 +87,12 @@ public class ReceiverMessageHandler implements MessageHandler {
         }
     }
 
+
     /**
-     * 增量更新设备 - 只更新接收到的字段
+     * 增量更新设备字段 - 根据新设备表结构
+     */
+    /**
+     * 增量更新设备字段 - 根据新设备表结构
      */
     private void incrementallyUpdateMachine(JsonNode jsonNode) {
         try {
@@ -96,12 +100,39 @@ public class ReceiverMessageHandler implements MessageHandler {
 
             boolean hasUpdates = false;
 
-            // 分别更新每个接收到的字段
+            // 根据新设备表结构更新字段
             if (jsonNode.has("water_add_switch") && !jsonNode.get("water_add_switch").isNull()) {
                 String value = jsonNode.get("water_add_switch").asText();
                 int result = machineMapper.updateWaterAddSwitch(fixedMachineId, value);
                 if (result > 0) {
-                    System.out.println("✅ 更新水位开关: " + value);
+                    System.out.println("✅ 更新开水开关: " + value);
+                    hasUpdates = true;
+                }
+            }
+
+            if (jsonNode.has("pause") && !jsonNode.get("pause").isNull()) {
+                String value = jsonNode.get("pause").asText();
+                int result = machineMapper.updatePause(fixedMachineId, value);
+                if (result > 0) {
+                    System.out.println("✅ 更新暂停状态: " + value);
+                    hasUpdates = true;
+                }
+            }
+
+            if (jsonNode.has("enable_device") && !jsonNode.get("enable_device").isNull()) {
+                String value = jsonNode.get("enable_device").asText();
+                int result = machineMapper.updateEnableDevice(fixedMachineId, value);
+                if (result > 0) {
+                    System.out.println("✅ 更新设备启用状态: " + value);
+                    hasUpdates = true;
+                }
+            }
+
+            if (jsonNode.has("water_tank") && !jsonNode.get("water_tank").isNull()) {
+                String value = jsonNode.get("water_tank").asText();
+                int result = machineMapper.updateWaterTank(fixedMachineId, value);
+                if (result > 0) {
+                    System.out.println("✅ 更新水箱状态: " + value);
                     hasUpdates = true;
                 }
             }
@@ -133,11 +164,72 @@ public class ReceiverMessageHandler implements MessageHandler {
                 }
             }
 
-            if (jsonNode.has("latitude_and_longitude") && !jsonNode.get("latitude_and_longitude").isNull()) {
-                String value = jsonNode.get("latitude_and_longitude").asText();
-                int result = machineMapper.updateLatitudeLongitude(fixedMachineId, value);
+            if (jsonNode.has("total_water_addition") && !jsonNode.get("total_water_addition").isNull()) {
+                Double value = jsonNode.get("total_water_addition").asDouble();
+                int result = machineMapper.updateTotalWaterAddition(fixedMachineId, value);
                 if (result > 0) {
-                    System.out.println("✅ 更新经纬度: " + value);
+                    System.out.println("✅ 更新总加水量: " + value);
+                    hasUpdates = true;
+                }
+            }
+
+            // 修正：分别处理经纬度字段
+            boolean latitudeUpdated = false;
+            boolean longitudeUpdated = false;
+
+            // 处理经度 (longitude)
+            if (jsonNode.has("longitude") && !jsonNode.get("longitude").isNull()) {
+                String longitude = jsonNode.get("longitude").asText();
+                int result = machineMapper.updateLongitude(fixedMachineId, longitude);
+                if (result > 0) {
+                    System.out.println("✅ 更新经度: " + longitude);
+                    longitudeUpdated = true;
+                    hasUpdates = true;
+                }
+            }
+
+            // 处理纬度 (latitude)
+            if (jsonNode.has("latitude") && !jsonNode.get("latitude").isNull()) {
+                String latitude = jsonNode.get("latitude").asText();
+                int result = machineMapper.updateLatitude(fixedMachineId, latitude);
+                if (result > 0) {
+                    System.out.println("✅ 更新纬度: " + latitude);
+                    latitudeUpdated = true;
+                    hasUpdates = true;
+                }
+            }
+
+            // 兼容旧版经纬度字段（latitude_and_longitude）
+            if (jsonNode.has("latitude_and_longitude") && !jsonNode.get("latitude_and_longitude").isNull()) {
+                String latLng = jsonNode.get("latitude_and_longitude").asText();
+                // 简单解析经纬度字符串（格式如："31.2304,121.4737"）
+                String[] parts = latLng.split(",");
+                if (parts.length == 2) {
+                    // 分别更新纬度和经度
+                    String latitude = parts[0].trim();
+                    String longitude = parts[1].trim();
+
+                    int latResult = machineMapper.updateLatitude(fixedMachineId, latitude);
+                    int lngResult = machineMapper.updateLongitude(fixedMachineId, longitude);
+
+                    if (latResult > 0) {
+                        System.out.println("✅ 更新纬度(兼容格式): " + latitude);
+                        latitudeUpdated = true;
+                        hasUpdates = true;
+                    }
+                    if (lngResult > 0) {
+                        System.out.println("✅ 更新经度(兼容格式): " + longitude);
+                        longitudeUpdated = true;
+                        hasUpdates = true;
+                    }
+                }
+            }
+
+            if (jsonNode.has("there_fee") && !jsonNode.get("there_fee").isNull()) {
+                String value = jsonNode.get("there_fee").asText();
+                int result = machineMapper.updateThereFee(fixedMachineId, value);
+                if (result > 0) {
+                    System.out.println("✅ 更新是否有费率: " + value);
                     hasUpdates = true;
                 }
             }
@@ -161,7 +253,7 @@ public class ReceiverMessageHandler implements MessageHandler {
             }
 
             if (hasUpdates) {
-                System.out.println("✅ 设备数据增量更新完成! ID: " + fixedMachineId);
+                System.out.println("🎉 设备数据增量更新完成! ID: " + fixedMachineId);
             } else {
                 System.out.println("ℹ️ 没有需要更新的字段");
             }
@@ -171,48 +263,6 @@ public class ReceiverMessageHandler implements MessageHandler {
             e.printStackTrace();
         }
     }
-    /**
-     * 只设置接收到的字段
-     */
-    private void setReceivedFields(Machine machine, JsonNode jsonNode) {
-        if (jsonNode.has("water_add_switch") && !jsonNode.get("water_add_switch").isNull()) {
-            machine.setWaterAddSwitch(jsonNode.get("water_add_switch").asText());
-        }
-        if (jsonNode.has("fill_up") && !jsonNode.get("fill_up").isNull()) {
-            machine.setFillUp(jsonNode.get("fill_up").asText());
-        }
-        if (jsonNode.has("device_temperature") && !jsonNode.get("device_temperature").isNull()) {
-            machine.setDeviceTemperature(jsonNode.get("device_temperature").asText());
-        }
-        if (jsonNode.has("battery_level") && !jsonNode.get("battery_level").isNull()) {
-            machine.setBatteryLevel(jsonNode.get("battery_level").asText());
-        }
-        if (jsonNode.has("latitude_and_longitude") && !jsonNode.get("latitude_and_longitude").isNull()) {
-            machine.setLatitudeAndLongitude(jsonNode.get("latitude_and_longitude").asText());
-        }
-        if (jsonNode.has("status") && !jsonNode.get("status").isNull()) {
-            machine.setStatus(jsonNode.get("status").asText());
-        }
-        if (jsonNode.has("location") && !jsonNode.get("location").isNull()) {
-            machine.setLocation(jsonNode.get("location").asText());
-        }
-    }
-    /**
-     * 从JSON设置设备字段
-     */
-    private void setMachineFieldsFromJson(Machine machine, JsonNode jsonNode) {
-        // 实时数据字段
-        machine.setWaterAddSwitch(getStringFromJson(jsonNode, "water_add_switch"));
-        machine.setFillUp(getStringFromJson(jsonNode, "fill_up"));
-        machine.setDeviceTemperature(getStringFromJson(jsonNode, "device_temperature"));
-        machine.setBatteryLevel(getStringFromJson(jsonNode, "battery_level"));
-        machine.setLatitudeAndLongitude(getStringFromJson(jsonNode, "latitude_and_longitude"));
-
-        // 基本信息字段
-        machine.setStatus(getStringFromJson(jsonNode, "status"));
-        machine.setLocation(getStringFromJson(jsonNode, "location"));
-    }
-
     /**
      * 从JSON中安全获取字符串字段
      */
@@ -226,7 +276,6 @@ public class ReceiverMessageHandler implements MessageHandler {
             }
             return null;
         } catch (Exception e) {
-
             return null;
         }
     }

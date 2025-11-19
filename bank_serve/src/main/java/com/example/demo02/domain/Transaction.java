@@ -1,37 +1,38 @@
 package com.example.demo02.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 
-
+/**
+ * 交易记录实体类
+ */
 @TableName("transaction")
 public class Transaction {
-
-    @TableId(type = IdType.INPUT)
-    private String transactionId;      // 交易记录id
-    private String userId;             // 用户id
-    private String machineId;          // 设备表的id
-    private String orderStatus;        // 订单状态
-    private Double totalLiters;        // 总加水量
-    private Double finalAmount;        // 最终金额
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime startTime;   // 交易开始的时间
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime endTime;     // 交易结束的时间
+    @TableId
+    private String transactionId;   // 交易记录id
+    private String userId;          // 用户id
+    private String userName;        // 用户名
+    private String machineId;       // 设备表的id
+    private String orderStatus;     // 订单状态
+    private Double totalLiters;     // 总加水量
+    private Double finalAmount;     // 最终金额
+    private LocalDateTime startTime; // 交易开始的时间
+    private LocalDateTime endTime;   // 交易结束的时间
 
     // 默认构造函数
     public Transaction() {
-        this.transactionId = generateTransactionId();
     }
 
-    // 生成交易ID的方法
-    private String generateTransactionId() {
-        return "TXN" + System.currentTimeMillis() + "_" + (int)(Math.random() * 1000);
+    // 带参构造函数
+    public Transaction(String transactionId, String userId, String machineId) {
+        this.transactionId = transactionId;
+        this.userId = userId;
+        this.machineId = machineId;
+        this.orderStatus = "pending"; // 默认待处理状态
+        this.totalLiters = 0.0;
+        this.finalAmount = 0.0;
+        this.startTime = LocalDateTime.now(); // 默认开始时间为当前时间
     }
 
     // Getter和Setter方法
@@ -49,6 +50,14 @@ public class Transaction {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getMachineId() {
@@ -104,6 +113,7 @@ public class Transaction {
         return "Transaction{" +
                 "transactionId='" + transactionId + '\'' +
                 ", userId='" + userId + '\'' +
+                ", userName='" + userName + '\'' +
                 ", machineId='" + machineId + '\'' +
                 ", orderStatus='" + orderStatus + '\'' +
                 ", totalLiters=" + totalLiters +
@@ -112,6 +122,4 @@ public class Transaction {
                 ", endTime=" + endTime +
                 '}';
     }
-
-
 }

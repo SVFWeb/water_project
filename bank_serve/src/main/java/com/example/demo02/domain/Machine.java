@@ -1,39 +1,46 @@
 package com.example.demo02.domain;
 
-
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.time.LocalDateTime;
-import javax.persistence.*;
-import java.util.Date;
+import com.baomidou.mybatisplus.annotation.TableName;
 
-@Table(name = "machine")
+@TableName("machine")
 public class Machine {
     @TableId
-    private String machineId;              // 设备唯一id
-    private String location;               // 设备位置
-    private String status;                 // 设备状态
-    private String waterAddSwitch;         // stm32的开水开关
-    private String fillUp;                 // 是否加满
-    private String deviceTemperature;      // 设备温度
-    private String batteryLevel;           // 电池电量
-    private String latitudeAndLongitude;   // 经纬度
+    private String machineId;           // 设备唯一id
+    private String location;            // 设备位置
+    private String status;              // 设备状态
+    private String waterAddSwitch;      // stm32的开水开关
+    private String pause;               // stm的开水暂停
+    private String enableDevice;        // 设备是否启用
+    private String waterTank;           // 水箱是否满
+    private String fillUp;              // 是否加满
+    private String deviceTemperature;   // 设备温度
+    private String batteryLevel;        // 电池电量
+    private Double totalWaterAddition;  // 总加水量
+    private String latitude;            // 经度
+    private String longitude;           // 纬度
+    private String thereFee;            // 是否有费率
 
     // 默认构造函数
     public Machine() {
     }
 
-    // 全参构造函数
-    public Machine(String machineId, String location, String status, String waterAddSwitch,
-                   String fillUp, String deviceTemperature, String batteryLevel, String latitudeAndLongitude) {
+    // 带设备ID的构造函数，其他字段设为默认值
+    public Machine(String machineId) {
         this.machineId = machineId;
-        this.location = location;
-        this.status = status;
-        this.waterAddSwitch = waterAddSwitch;
-        this.fillUp = fillUp;
-        this.deviceTemperature = deviceTemperature;
-        this.batteryLevel = batteryLevel;
-        this.latitudeAndLongitude = latitudeAndLongitude;
+        this.location = "0";           // 默认位置
+        this.status = "0";           // 默认离线状态
+        this.waterAddSwitch = "0";         // 默认关闭
+        this.pause = "0";                  // 默认未暂停
+        this.enableDevice = "1";           // 默认启用
+        this.waterTank = "0";              // 默认水箱不满
+        this.fillUp = "0";                 // 默认未加满
+        this.deviceTemperature = "0";      // 默认温度0
+        this.batteryLevel = "0";           // 默认电量0
+        this.totalWaterAddition = 0.0;     // 默认总加水量0
+        this.latitude = "0.0";             // 默认纬度
+        this.longitude = "0.0";            // 默认经度
+        this.thereFee = "0";               // 默认无费率
     }
 
     // Getter和Setter方法
@@ -69,6 +76,30 @@ public class Machine {
         this.waterAddSwitch = waterAddSwitch;
     }
 
+    public String getPause() {
+        return pause;
+    }
+
+    public void setPause(String pause) {
+        this.pause = pause;
+    }
+
+    public String getEnableDevice() {
+        return enableDevice;
+    }
+
+    public void setEnableDevice(String enableDevice) {
+        this.enableDevice = enableDevice;
+    }
+
+    public String getWaterTank() {
+        return waterTank;
+    }
+
+    public void setWaterTank(String waterTank) {
+        this.waterTank = waterTank;
+    }
+
     public String getFillUp() {
         return fillUp;
     }
@@ -93,12 +124,36 @@ public class Machine {
         this.batteryLevel = batteryLevel;
     }
 
-    public String getLatitudeAndLongitude() {
-        return latitudeAndLongitude;
+    public Double getTotalWaterAddition() {
+        return totalWaterAddition;
     }
 
-    public void setLatitudeAndLongitude(String latitudeAndLongitude) {
-        this.latitudeAndLongitude = latitudeAndLongitude;
+    public void setTotalWaterAddition(Double totalWaterAddition) {
+        this.totalWaterAddition = totalWaterAddition;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getThereFee() {
+        return thereFee;
+    }
+
+    public void setThereFee(String thereFee) {
+        this.thereFee = thereFee;
     }
 
     @Override
@@ -108,11 +163,16 @@ public class Machine {
                 ", location='" + location + '\'' +
                 ", status='" + status + '\'' +
                 ", waterAddSwitch='" + waterAddSwitch + '\'' +
+                ", pause='" + pause + '\'' +
+                ", enableDevice='" + enableDevice + '\'' +
+                ", waterTank='" + waterTank + '\'' +
                 ", fillUp='" + fillUp + '\'' +
                 ", deviceTemperature='" + deviceTemperature + '\'' +
                 ", batteryLevel='" + batteryLevel + '\'' +
-                ", latitudeAndLongitude='" + latitudeAndLongitude + '\'' +
+                ", totalWaterAddition=" + totalWaterAddition +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", thereFee='" + thereFee + '\'' +
                 '}';
     }
-
 }

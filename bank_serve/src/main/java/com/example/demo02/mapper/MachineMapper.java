@@ -1,63 +1,35 @@
 package com.example.demo02.mapper;
 
-
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.demo02.domain.Machine;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+
 @Mapper
-public interface MachineMapper {
+public interface MachineMapper extends BaseMapper<Machine> {
 
     // 查询所有设备
-    @Select("SELECT machine_id, location, status, water_add_switch, fill_up, " +
-            "device_temperature, battery_level, latitude_and_longitude FROM machine")
+    @Select("SELECT * FROM machine")
     List<Machine> findAll();
 
-    // 根据ID查询设备
-    @Select("SELECT machine_id, location, status, water_add_switch, fill_up, " +
-            "device_temperature, battery_level, latitude_and_longitude FROM machine " +
-            "WHERE machine_id = #{machineId}")
-    Machine findById(@Param("machineId") String machineId);
-
-    // 根据状态查询设备
-    @Select("SELECT machine_id, location, status, water_add_switch, fill_up, " +
-            "device_temperature, battery_level, latitude_and_longitude FROM machine " +
-            "WHERE status = #{status}")
-    List<Machine> findByStatus(@Param("status") String status);
-
-    // 根据位置模糊查询设备
-    @Select("SELECT machine_id, location, status, water_add_switch, fill_up, " +
-            "device_temperature, battery_level, latitude_and_longitude FROM machine " +
-            "WHERE location LIKE CONCAT('%', #{location}, '%')")
-    List<Machine> findByLocation(@Param("location") String location);
+    // 根据设备ID查询设备
+    @Select("SELECT * FROM machine WHERE machine_id = #{machineId}")
+    Machine findByMachineId(@Param("machineId") String machineId);
 
     // 插入设备
-    @Insert("INSERT INTO machine (machine_id, location, status, water_add_switch, fill_up, " +
-            "device_temperature, battery_level, latitude_and_longitude) " +
-            "VALUES (#{machineId}, #{location}, #{status}, #{waterAddSwitch}, #{fillUp}, " +
-            "#{deviceTemperature}, #{batteryLevel}, #{latitudeAndLongitude})")
+    @Insert("INSERT INTO machine (machine_id, location, status, water_add_switch, pause, enable_device, " +
+            "water_tank, fill_up, device_temperature, battery_level, total_water_addition, latitude, longitude, there_fee) " +
+            "VALUES (#{machineId}, #{location}, #{status}, #{waterAddSwitch}, #{pause}, #{enableDevice}, " +
+            "#{waterTank}, #{fillUp}, #{deviceTemperature}, #{batteryLevel}, #{totalWaterAddition}, #{latitude}, #{longitude}, #{thereFee})")
     int insert(Machine machine);
 
-    // 更新设备信息
-    @Update("UPDATE machine SET location = #{location}, status = #{status}, " +
-            "water_add_switch = #{waterAddSwitch}, fill_up = #{fillUp}, " +
-            "device_temperature = #{deviceTemperature}, battery_level = #{batteryLevel}, " +
-            "latitude_and_longitude = #{latitudeAndLongitude} " +
-            "WHERE machine_id = #{machineId}")
+    // 更新设备信息（全字段更新）
+    @Update("UPDATE machine SET location = #{location}, status = #{status}, water_add_switch = #{waterAddSwitch}, " +
+            "pause = #{pause}, enable_device = #{enableDevice}, water_tank = #{waterTank}, fill_up = #{fillUp}, " +
+            "device_temperature = #{deviceTemperature}, battery_level = #{batteryLevel}, total_water_addition = #{totalWaterAddition}, " +
+            "latitude = #{latitude}, longitude = #{longitude}, there_fee = #{thereFee} WHERE machine_id = #{machineId}")
     int update(Machine machine);
-
-
-    // 更新设备实时数据（MQTT用）
-    @Update("UPDATE machine SET water_add_switch = #{waterAddSwitch}, fill_up = #{fillUp}, " +
-            "device_temperature = #{deviceTemperature}, battery_level = #{batteryLevel}, " +
-            "latitude_and_longitude = #{latitudeAndLongitude} " +
-            "WHERE machine_id = #{machineId}")
-    int updateDeviceData(@Param("machineId") String machineId,
-                         @Param("waterAddSwitch") String waterAddSwitch,
-                         @Param("fillUp") String fillUp,
-                         @Param("deviceTemperature") String deviceTemperature,
-                         @Param("batteryLevel") String batteryLevel,
-                         @Param("latitudeAndLongitude") String latitudeAndLongitude);
 
     // 删除设备
     @Delete("DELETE FROM machine WHERE machine_id = #{machineId}")
@@ -67,49 +39,63 @@ public interface MachineMapper {
     @Select("SELECT COUNT(*) FROM machine WHERE machine_id = #{machineId}")
     int existsByMachineId(@Param("machineId") String machineId);
 
+    // ========== 单个字段更新方法 ==========
+
+    @Update("UPDATE machine SET location = #{location} WHERE machine_id = #{machineId}")
+    int updateLocation(@Param("machineId") String machineId, @Param("location") String location);
+
+    @Update("UPDATE machine SET status = #{status} WHERE machine_id = #{machineId}")
+    int updateStatus(@Param("machineId") String machineId, @Param("status") String status);
+
+    @Update("UPDATE machine SET water_add_switch = #{waterAddSwitch} WHERE machine_id = #{machineId}")
+    int updateWaterAddSwitch(@Param("machineId") String machineId, @Param("waterAddSwitch") String waterAddSwitch);
+
+    @Update("UPDATE machine SET pause = #{pause} WHERE machine_id = #{machineId}")
+    int updatePause(@Param("machineId") String machineId, @Param("pause") String pause);
+
+    @Update("UPDATE machine SET enable_device = #{enableDevice} WHERE machine_id = #{machineId}")
+    int updateEnableDevice(@Param("machineId") String machineId, @Param("enableDevice") String enableDevice);
+
+    @Update("UPDATE machine SET water_tank = #{waterTank} WHERE machine_id = #{machineId}")
+    int updateWaterTank(@Param("machineId") String machineId, @Param("waterTank") String waterTank);
+
+    @Update("UPDATE machine SET fill_up = #{fillUp} WHERE machine_id = #{machineId}")
+    int updateFillUp(@Param("machineId") String machineId, @Param("fillUp") String fillUp);
+
+    @Update("UPDATE machine SET device_temperature = #{deviceTemperature} WHERE machine_id = #{machineId}")
+    int updateDeviceTemperature(@Param("machineId") String machineId, @Param("deviceTemperature") String deviceTemperature);
+
+    @Update("UPDATE machine SET battery_level = #{batteryLevel} WHERE machine_id = #{machineId}")
+    int updateBatteryLevel(@Param("machineId") String machineId, @Param("batteryLevel") String batteryLevel);
+
+    @Update("UPDATE machine SET total_water_addition = #{totalWaterAddition} WHERE machine_id = #{machineId}")
+    int updateTotalWaterAddition(@Param("machineId") String machineId, @Param("totalWaterAddition") Double totalWaterAddition);
+
+    @Update("UPDATE machine SET latitude = #{latitude} WHERE machine_id = #{machineId}")
+    int updateLatitude(@Param("machineId") String machineId, @Param("latitude") String latitude);
+
+    @Update("UPDATE machine SET longitude = #{longitude} WHERE machine_id = #{machineId}")
+    int updateLongitude(@Param("machineId") String machineId, @Param("longitude") String longitude);
+
+    @Update("UPDATE machine SET there_fee = #{thereFee} WHERE machine_id = #{machineId}")
+    int updateThereFee(@Param("machineId") String machineId, @Param("thereFee") String thereFee);
+
+    // 增加总加水量
+    @Update("UPDATE machine SET total_water_addition = total_water_addition + #{addition} WHERE machine_id = #{machineId}")
+    int addTotalWaterAddition(@Param("machineId") String machineId, @Param("addition") Double addition);
+
     // 统计设备数量
     @Select("SELECT COUNT(*) FROM machine")
     int countAll();
 
-    // 根据状态统计设备数量
-    @Select("SELECT COUNT(*) FROM machine WHERE status = #{status}")
-    int countByStatus(@Param("status") String status);
+    // 根据状态查询设备
+    @Select("SELECT * FROM machine WHERE status = #{status}")
+    List<Machine> findByStatus(@Param("status") String status);
 
-    // 增量更新设备（只更新非空字段）
-    @Update("<script>" +
-            "UPDATE machine SET " +
-            "<if test='location != null'>location = #{location},</if>" +
-            "<if test='status != null'>status = #{status},</if>" +
-            "<if test='waterAddSwitch != null'>water_add_switch = #{waterAddSwitch},</if>" +
-            "<if test='fillUp != null'>fill_up = #{fillUp},</if>" +
-            "<if test='deviceTemperature != null'>device_temperature = #{deviceTemperature},</if>" +
-            "<if test='batteryLevel != null'>battery_level = #{batteryLevel},</if>" +
-            "<if test='latitudeAndLongitude != null'>latitude_and_longitude = #{latitudeAndLongitude}</if>" +
-            " WHERE machine_id = #{machineId}" +
-            "</script>")
-    int incrementalUpdate(Machine machine);
+    // 根据启用状态查询设备
+    @Select("SELECT * FROM machine WHERE enable_device = #{enableDevice}")
+    List<Machine> findByEnableDevice(@Param("enableDevice") String enableDevice);
 
-    // 分别更新每个字段的方法
-    @Update("UPDATE machine SET water_add_switch = #{value} WHERE machine_id = #{machineId}")
-    int updateWaterAddSwitch(@Param("machineId") String machineId, @Param("value") String value);
-
-    @Update("UPDATE machine SET fill_up = #{value} WHERE machine_id = #{machineId}")
-    int updateFillUp(@Param("machineId") String machineId, @Param("value") String value);
-
-    @Update("UPDATE machine SET device_temperature = #{value} WHERE machine_id = #{machineId}")
-    int updateDeviceTemperature(@Param("machineId") String machineId, @Param("value") String value);
-
-    @Update("UPDATE machine SET battery_level = #{value} WHERE machine_id = #{machineId}")
-    int updateBatteryLevel(@Param("machineId") String machineId, @Param("value") String value);
-
-    @Update("UPDATE machine SET latitude_and_longitude = #{value} WHERE machine_id = #{machineId}")
-    int updateLatitudeLongitude(@Param("machineId") String machineId, @Param("value") String value);
-
-    @Update("UPDATE machine SET status = #{value} WHERE machine_id = #{machineId}")
-    int updateStatus(@Param("machineId") String machineId, @Param("value") String value);
-
-    @Update("UPDATE machine SET location = #{value} WHERE machine_id = #{machineId}")
-    int updateLocation(@Param("machineId") String machineId, @Param("value") String value);
 
 
 }
