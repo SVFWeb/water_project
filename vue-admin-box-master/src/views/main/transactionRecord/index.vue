@@ -1,6 +1,7 @@
 <template>
   <div class="layout-container">
     <div class="layout-container-form flex space-between">
+      
       <div class="layout-container-form-handle">
 
         <!-- 批量删除 -->
@@ -141,6 +142,7 @@ const getTableData = () => {
 
 // 删除功能
 const handleDel = (data) => {
+  console.log(data);
   
 }
 
@@ -151,4 +153,5 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

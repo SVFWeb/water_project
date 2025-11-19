@@ -1,1 +1,124 @@
-/* pages/order/order.wxss */
+.ordersTopBox{
+  padding: 100rpx 20rpx 20rpx 20rpx ;
+  background: linear-gradient(-180deg, #1296db, #9ad9fc);
+}
+.orderTop-topBox{
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  justify-content: space-evenly;
+}
+.orderTop-top{
+  font-size: 28rpx;
+  font-weight: bolder;
+  color: #2c2c2c;
+  width: 45%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx 0;
+  background-color: #f7f7f7;
+  border-radius: 15rpx;
+}
+.orderTop-top-active{
+  font-size: 28rpx;
+  font-weight: bolder;
+  color: #1296db;
+  width: 45%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx 0;
+  background-color: #f7f7f7;
+  border-radius: 15rpx;
+}
+.ordersMiddleBox{
+  padding: 20rpx;
+  height: 80vh;
+  background: #f7f7f7;
+  display: flex;
+}
+.ordersMiddle-swiper-box{
+  flex: 1;
+}
+.ordersMiddle-swiper{
+  height: 100%;
+}
+.ordersMiddle-swiper-item{
+  height: 100%;
+}
+.ordersMiddle-scroll-view{
+  height: 100%;
+}
+
+.ordersMiddle-list-card{
+  background-color: #ffffff;
+  margin-top: 15rpx;
+  padding: 30rpx;
+  border-radius: 20rpx;
+}
+.order-card, .recharge-card {
+  width: 100%;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.order-id {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.order-status {
+  font-size: 24rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  background-color: #e8f7f0;
+  color: #07c160;
+}
+
+.order-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.machine, .time, .payment {
+  font-size: 26rpx;
+  color: #333;
+}
+
+.order-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.amount {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #ff6b35;
+}
+
+.recharge-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bonus {
+  font-size: 24rpx;
+  color: #fa8c16;
+  background-color: #fff7e6;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+}

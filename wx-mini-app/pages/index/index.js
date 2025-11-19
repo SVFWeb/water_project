@@ -3,8 +3,28 @@ Page({
   data: {
     city: '南宁市', // 默认城市
     balance:1.23,
-    SwiperIndex:1
+    SwiperIndex:0
   },
+    //改变下标值
+    changeSwiperIndexOne(e){
+      this.setData({
+        SwiperIndex:0
+      })
+    },
+    //改变下标值
+    changeSwiperIndexTwo(e){
+      this.setData({
+        SwiperIndex:1
+      })
+    },
+    // swiper 切换时触发
+    onSwiperChange(e) {
+      const current = e.detail.current;
+      // swiper 索引从0开始，我们的下标从1开始，所以要+1
+      this.setData({
+        SwiperIndex: current 
+      });
+    },
   onLoad: function () {
     this.getCurrentCity();
   },

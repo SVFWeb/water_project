@@ -5,9 +5,28 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    orderSwiperIndex:1,//订单页的标题下标
   },
-
+  //改变下标值
+  changeOrderSwiperIndexOne(e){
+    this.setData({
+      orderSwiperIndex:0
+    })
+  },
+  //改变下标值
+  changeOrderSwiperIndexTwo(e){
+    this.setData({
+      orderSwiperIndex:1
+    })
+  },
+  // swiper 切换时触发
+  onSwiperChange(e) {
+    const current = e.detail.current;
+    // swiper 索引从0开始，我们的下标从1开始，所以要+1
+    this.setData({
+      orderSwiperIndex: current 
+    });
+  },
   /**
    * 生命周期函数--监听页面加载
    */

@@ -18,7 +18,6 @@ import Print from '../modules/print'
 import Community from '../modules/community'
 import Tab from '../modules/tab'
 import MachineList from '../modules/machineList'
-import FaultLog from '../modules/faultLog'
 import RateSetting from '../modules/rateSetting'
 import TransactionRecord from '../modules/transactionRecord'
 
@@ -26,7 +25,6 @@ import TransactionRecord from '../modules/transactionRecord'
 const FrontRoutes: Route[] = [
   ...Dashboard,
   ...MachineList,
-  ...FaultLog,
   ...RateSetting,
   ...TransactionRecord,
   ...Document,
