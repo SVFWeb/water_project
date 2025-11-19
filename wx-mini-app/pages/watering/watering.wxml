@@ -40,7 +40,7 @@
     <view class="waterMachineCard-middle">
       <image src="/image/water-bg2.jpeg" mode="scaleToFill"/>
       <view class="waterMachineCard-middle-priceBox">
-        <text class="waterMachineCard-middle-price">3.99</text>
+        <text class="waterMachineCard-middle-price">0.27</text>
         <view class="waterMachineCard-middle-price-idle">
           <image src="/image/shuidi.png" mode=""/>
           <text>空闲 0/1</text>
