@@ -5,7 +5,7 @@ const route: Route[] = [
   {
     path: '/transaction',
     component: Layout,
-    redirect:'/transaction/list',
+    redirect:'/transaction/record',
     meta: { title: '交易', icon: 'sfont system-shequ' },
     children: [
       {

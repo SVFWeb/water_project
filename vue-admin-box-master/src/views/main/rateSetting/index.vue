@@ -35,7 +35,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import Table from '@/components/table/index.vue'
-import {  Search, Delete } from '@element-plus/icons'
+import {  Search, Plus } from '@element-plus/icons'
 
 // 表格数据
 const tableData = ref([])
