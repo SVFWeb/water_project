@@ -3,6 +3,8 @@ package com.example.demo02.controller;
 import com.example.demo02.domain.Machine;
 import com.example.demo02.domain.ResponseResult;
 import com.example.demo02.mapper.MachineMapper;
+import com.example.demo02.service.MqttHealthService;
+import com.example.demo02.service.MqttMessageSender;
 import com.example.demo02.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,169 @@ public class machineController {
     @Autowired
     private MachineMapper machineMapper;
 
+    @Autowired
+    MqttMessageSender mqttMessageSender;
+
+    @Autowired
+    private MqttHealthService mqttHealthService;
+
+    //连接mtqq
+    /**
+     * 简单的MQTT状态检查
+     */
+
+    @GetMapping("/health")
+    public Map<String, Object> checkMqttHealth() {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            boolean isConnected = mqttHealthService.checkMqttConnection();
+            String connectionInfo = mqttHealthService.getMqttConnectionInfo();
+
+            result.put("status", isConnected ? "connected" : "disconnected");
+            result.put("connected", isConnected);
+            result.put("connectionInfo", connectionInfo);
+            result.put("timestamp", System.currentTimeMillis());
+            result.put("message", isConnected ? "MQTT服务连接正常" : "MQTT服务连接异常");
+
+        } catch (Exception e) {
+            result.put("status", "error");
+            result.put("connected", false);
+            result.put("message", "MQTT健康检查异常: " + e.getMessage());
+            result.put("timestamp", System.currentTimeMillis());
+        }
+
+        return result;
+    }
+
+    //开关
+    // 简单的水开关控制接口 - 使用固定设备ID
+    @PostMapping("/water")
+    public ResponseEntity<ResponseResult> controlWater(@RequestParam String water) {
+        try {
+            String waterCommand = water.toLowerCase().trim();
+            String messagePayload;
+            String commandDescription;
+
+            // 根据water字段值确定发送的消息
+            switch (waterCommand) {
+                case "on":
+                case "1":
+                    messagePayload = "{@water_add_switch:1}";
+                    commandDescription = "打开水开关";
+                    break;
+                case "off":
+                case "0":
+                    messagePayload = "{@water_add_switch:0}";
+                    commandDescription = "关闭水开关";
+                    break;
+                default:
+                    return ResponseUtils.businessError("water参数值必须是 'on' 或 'off'");
+            }
+
+            // 使用固定设备ID的主题
+            String controlTopic = "lampline";
+
+            // 发送MQTT消息
+            mqttMessageSender.sendMsg(controlTopic, messagePayload);
+
+            System.out.println("💧 发送水控制命令 - 设备: ma1, 主题: " + controlTopic +
+                    ", 命令: " + messagePayload);
+
+            // 构建响应数据
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("machineId", "ma1");
+            responseData.put("topic", controlTopic);
+            responseData.put("payload", messagePayload);
+            responseData.put("command", waterCommand);
+            responseData.put("description", commandDescription);
+
+            return ResponseUtils.ok(responseData, commandDescription + "命令发送成功");
+
+        } catch (Exception e) {
+            System.err.println("❌ 水控制命令发送失败: " + e.getMessage());
+            return ResponseUtils.serverError("水控制命令发送失败: " + e.getMessage());
+        }
+    }
+    //暂停
+    @PostMapping("/pause")
+    public ResponseEntity<ResponseResult> controlPause(@RequestParam String water) {
+        try {
+            String waterCommand = water.toLowerCase().trim();
+            String messagePayload;
+            String commandDescription;
+
+            // 根据water字段值确定发送的消息
+            switch (waterCommand) {
+                case "on":
+                case "1":
+                    messagePayload = "{@pause:1}";
+                    commandDescription = "开启暂停";
+                    break;
+                case "off":
+                case "0":
+                    messagePayload = "{@pause:0}";
+                    commandDescription = "关闭暂停";
+                    break;
+                default:
+                    return ResponseUtils.businessError("water参数值必须是 'on' 或 'off'");
+            }
+
+            // 使用固定设备ID的主题
+            String controlTopic = "lampline";
+
+            // 发送MQTT消息
+            mqttMessageSender.sendMsg(controlTopic, messagePayload);
+
+            System.out.println("💧 发送暂停控制命令 - 设备: ma1, 主题: " + controlTopic +
+                    ", 命令: " + messagePayload);
+
+            // 构建响应数据
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("machineId", "ma1");
+            responseData.put("topic", controlTopic);
+            responseData.put("payload", messagePayload);
+            responseData.put("command", waterCommand);
+            responseData.put("description", commandDescription);
+
+            return ResponseUtils.ok(responseData, commandDescription + "命令发送成功");
+
+        } catch (Exception e) {
+            System.err.println("❌ 暂停控制命令发送失败: " + e.getMessage());
+            return ResponseUtils.serverError("暂停控制命令发送失败: " + e.getMessage());
+        }
+    }
+    //是否启用
+    // 检查设备是否已启动
+    @GetMapping("/enable_device/status")
+    public ResponseEntity<ResponseResult> checkDeviceStatus() {
+        try {
+            // 查询固定设备ID的启用状态
+            Machine machine = machineMapper.findByMachineId("ma1");
+
+            if (machine == null) {
+                return ResponseUtils.businessError("设备不存在");
+            }
+
+            String enableStatus = machine.getEnableDevice();
+            boolean isEnabled = "1".equals(enableStatus);
+
+            String statusDescription = isEnabled ? "1" : "0";
+
+            // 构建响应数据
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("machineId", "ma1");
+            responseData.put("enable_device", enableStatus);
+            responseData.put("isEnabled", isEnabled);
+            responseData.put("status", statusDescription);
+
+            return ResponseUtils.ok(responseData, statusDescription);
+
+        } catch (Exception e) {
+            System.err.println("❌ 查询设备状态失败: " + e.getMessage());
+            return ResponseUtils.serverError("查询设备状态失败: " + e.getMessage());
+        }
+    }
     // 新增设备
     @PostMapping
     public ResponseEntity<ResponseResult> createMachine(@RequestBody Machine machine) {

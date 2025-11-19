@@ -248,6 +248,44 @@ public class TransactionController {
             return ResponseUtils.serverError("服务器错误: " + e.getMessage());
         }
     }
+    // 批量删除交易记录
+    @DeleteMapping("/batch")
+    public ResponseEntity<ResponseResult> deleteTransactionsBatch(@RequestBody Map<String, Object> request) {
+        try {
+            // 获取要删除的交易ID列表
+            List<String> transactionIds = (List<String>) request.get("transactionIds");
+
+            // 参数验证
+            if (transactionIds == null || transactionIds.isEmpty()) {
+                return ResponseUtils.businessError("请提供要删除的交易记录ID列表");
+            }
+
+            // 限制批量删除的数量，防止误操作
+            if (transactionIds.size() > 100) {
+                return ResponseUtils.businessError("单次批量删除不能超过100条记录");
+            }
+
+            // 检查所有交易记录是否存在
+            int existingCount = transactionMapper.countExistingTransactions(transactionIds);
+            if (existingCount != transactionIds.size()) {
+                return ResponseUtils.businessError("部分交易记录不存在，请检查ID列表");
+            }
+
+            // 执行批量删除
+            int result = transactionMapper.deleteBatch(transactionIds);
+
+            if (result > 0) {
+                Map<String, Object> responseData = new HashMap<>();
+                responseData.put("deletedCount", result);
+                responseData.put("transactionIds", transactionIds);
+                return ResponseUtils.ok(responseData, "成功删除 " + result + " 条交易记录");
+            } else {
+                return ResponseUtils.businessError("批量删除交易记录失败");
+            }
+        } catch (Exception e) {
+            return ResponseUtils.serverError("批量删除交易记录失败: " + e.getMessage());
+        }
+    }
 
 
 }

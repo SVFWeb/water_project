@@ -74,4 +74,27 @@ public interface TransactionMapper extends BaseMapper<Transaction> {
     // 查询用户交易总额
     @Select("SELECT COALESCE(SUM(final_amount), 0) FROM transaction WHERE user_id = #{userId}")
     Double getTotalAmountByUserId(@Param("userId") String userId);
+
+    // 批量删除交易记录
+    @Delete({
+            "<script>",
+            "DELETE FROM transaction WHERE transaction_id IN",
+            "<foreach collection='transactionIds' item='id' open='(' separator=',' close=')'>",
+            "#{id}",
+            "</foreach>",
+            "</script>"
+    })
+    int deleteBatch(@Param("transactionIds") List<String> transactionIds);
+
+    // 批量检查交易记录是否存在
+    @Select({
+            "<script>",
+            "SELECT COUNT(*) FROM transaction WHERE transaction_id IN",
+            "<foreach collection='transactionIds' item='id' open='(' separator=',' close=')'>",
+            "#{id}",
+            "</foreach>",
+            "</script>"
+    })
+    int countExistingTransactions(@Param("transactionIds") List<String> transactionIds);
+
 }
