@@ -10,13 +10,13 @@
       <div class="box" ref="box">
         <el-scrollbar height="100%">
           <el-row :gutter="20">
-            <el-col :md="8" v-for="row in 4" :key="row.id">
+            <el-col :md="8" v-for="(row, index) in list" :key="row + index">
               <el-card :body-style="{ padding: '0px' }" shadow="hover">
                 <img src="http://blog.51weblove.com/wp-content/uploads/2019/03/2019032323331541.jpg" class="image">
                 <div style="padding: 14px;">
-                  <span>设备名称</span>
+                  <span>{{ row.machineId }}</span>
                   <div class="bottom clearfix">
-                    <div class="online" v-if="true">
+                    <div class="online" v-if="row.status === '在线'">
                       <el-icon>
                         <CircleCheck />
                       </el-icon>
@@ -28,7 +28,7 @@
                       </el-icon>
                       <span>离线</span>
                     </div>
-                    <el-button type="text" class="edit-button" @click="showEditor">查看详情</el-button>
+                    <el-button type="text" class="edit-button" @click="showEditor(row)">查看详情</el-button>
                   </div>
                 </div>
               </el-card>
@@ -40,62 +40,68 @@
       <!-- 设备详情弹出框 -->
       <el-dialog v-model="dialogVisible" title="设备信息" width="700px" :before-close="handleClose">
         <div class="form-container">
-          <!-- 地区选择器 -->
-          <div class="form-item full-width">
-            <label>地区</label>
-            <el-cascader v-model="formData.region" :options="optionsnative_place" />
-          </div>
 
-          <!-- 经度 -->
-          <div class="form-item">
-            <label>经度</label>
-            <el-input v-model="formData.longitude" placeholder="请输入经度" />
-          </div>
+          <el-form :model="formData">
+            <!-- 地区选择器 -->
+            <div class="form-item full-width">
+              <label>地区</label>
+              <el-cascader v-model="formData.location" :options="optionsnative_place" />
+            </div>
 
-          <!-- 纬度 -->
-          <div class="form-item">
-            <label>纬度</label>
-            <el-input v-model="formData.latitude" placeholder="请输入纬度" />
-          </div>
+            <!-- 经度 -->
+            <div class="form-item">
+              <label>经度</label>
+              <el-input v-model="formData.latitude" placeholder="请输入经度" />
+            </div>
 
-          <!-- 状态开关 -->
-          <div class="form-item">
-            <label>状态</label>
-            <el-switch v-model="formData.status" active-text="开启" inactive-text="关闭" />
-          </div>
+            <!-- 纬度 -->
+            <div class="form-item">
+              <label>纬度</label>
+              <el-input v-model="formData.longitude" placeholder="请输入纬度" />
+            </div>
 
-          <!-- 设备是否启用 -->
-          <div class="form-item">
-            <label>设备是否启用</label>
-            <el-radio-group v-model="formData.deviceEnabled">
-              <el-radio :label="true">是</el-radio>
-              <el-radio :label="false">否</el-radio>
-            </el-radio-group>
-          </div>
+            <!-- 状态开关 -->
+            <div class="form-item">
+              <label>状态</label>
+              <el-radio-group v-model="formData.pause">
+                <el-radio :label="'1'">开启</el-radio>
+                <el-radio :label="'0'">关闭</el-radio>
+              </el-radio-group>
+            </div>
 
-          <!-- 水箱是否加满 -->
-          <div class="form-item">
-            <label>水箱是否加满</label>
-            {{ 0 > 1 ? '是' : '否' }}
-          </div>
+            <!-- 设备是否启用 -->
+            <div class="form-item">
+              <label>设备是否启用</label>
+              <el-radio-group v-model="formData.enableDevice">
+                <el-radio :label="'1'">是</el-radio>
+                <el-radio :label="'0'">否</el-radio>
+              </el-radio-group>
+            </div>
 
-          <!-- 设备温度 -->
-          <div class="form-item">
-            <label>设备温度 (°C)</label>
-            {{ formData.temperature }}
-          </div>
+            <!-- 水箱是否加满 -->
+            <div class="form-item">
+              <label>水箱是否加满</label>
+              {{ formData.waterTank === '1' ? '是' : '否' }}
+            </div>
 
-          <!-- 电池电量 -->
-          <div class="form-item">
-            <label>电池电量 (%)</label>
-            {{ '80' }}
-          </div>
+            <!-- 设备温度 -->
+            <div class="form-item">
+              <label>设备温度 (°C)</label>
+              {{ formData.deviceTemperature }}
+            </div>
 
-          <!-- 总加水量 -->
-          <div class="form-item">
-            <label>总加水量 (ML)</label>
-            {{ 600 }}
-          </div>
+            <!-- 电池电量 -->
+            <div class="form-item">
+              <label>电池电量 (%)</label>
+              {{ formData.batteryLevel }}
+            </div>
+
+            <!-- 总加水量 -->
+            <div class="form-item">
+              <label>总加水量 (ML)</label>
+              {{ formData.totalWaterAddition }}
+            </div>
+          </el-form>
 
 
         </div>
@@ -130,7 +136,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { Plus } from '@element-plus/icons'
-import { getData } from '@/api/card'
+import { apiGetMachineList, apiPatMachine, apiAddMachine } from '@/api/machine/list'
 // 级联地址
 import { pcaTextArr } from 'element-china-area-data'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -144,47 +150,46 @@ const AddDialogVisible = ref(false);
 
 // 表单数据
 const formData = reactive({
-  region: [],
-  status: true,
-  deviceEnabled: true,
-  tankFull: false,
-  temperature: 25,
-  batteryLevel: 80,
-  totalWater: 0,
-  longitude: '116.36864881583199',
-  latitude: '39.95766339839936'
+  machineId: '',
+  location: [], // 地区
+  status: '0', // 设备状态
+  pause: '0', // 开关状态
+  enableDevice: '0', // 是否启用
+  waterTank: '0', // 水箱是否加满
+  deviceTemperature: '0', // 设备温度
+  batteryLevel: '0', // 电池电量
+  totalWaterAddition: '0',// 总加水量
+  longitude: '', // 纬度
+  latitude: '' // 经度
 });
 
-// 
+// 添加设备表格
 const AddFormData = ref({
-  machineId: '',// 设备名称
-  location: [] // 地址
+  machineId: '',
+  location: [], // 地区
+  status: '0', // 设备状态
+  pause: '0', // 开关状态
+  enableDevice: '0', // 是否启用
+  waterTank: '0', // 水箱是否加满
+  deviceTemperature: '0', // 设备温度
+  batteryLevel: '0', // 电池电量
+  totalWaterAddition: '0',// 总加水量
+  longitude: '', // 纬度
+  latitude: '' // 经度
 })
-
-/*
-  const text = '北京市 市辖区 东城区';
-  const result = text.split(' ');
-  console.log(result);  // ['北京市', '市辖区', '东城区']
-
-  const arr = ['北京市', '市辖区', '东城区'];
-  const result = arr.join(' ');
-  console.log(result);  // '北京市 市辖区 东城区'
-*/
 
 
 // 处理弹窗关闭
 const handleClose = (done) => {
-  ElMessageBox.confirm('确定要关闭吗？')
-    .then(() => {
-      done();
-    })
+  done();
 };
 
 // 处理表单提交
 const handleSubmit = () => {
+  formData.location = formData.location.join(' ')
   ElMessageBox.confirm('确定要修改吗？')
-    .then(() => {
-      console.log('表单数据:', formData);
+    .then(async () => {
+      let res = await apiPatMachine(formData)
       ElMessage.success('修改成功！');
       dialogVisible.value = false;
     })
@@ -195,16 +200,22 @@ const loading = ref(true)
 // 设备列表
 const list = ref([])
 const box = ref()
+// 获取
+const getMachineList = async () => {
+  try {
+    let { data } = await apiGetMachineList()
+    list.value = data
 
-const getListData = (init) => {
-  loading.value = true
-
-  loading.value = false
+  } finally {
+    loading.value = false
+  }
 }
 
 // 查看详情
-const showEditor = () => {
+const showEditor = (row) => {
   dialogVisible.value = true
+  row.location = row.location.split(' ')
+  Object.assign(formData, row)
 }
 
 // 添加设备
@@ -213,12 +224,24 @@ function onAddMachine() {
 }
 
 // 添加设备 -确认
-function AddConfirm() {
-  ElMessageBox.confirm('确定要添加吗？')
-    .then(() => {
-      AddDialogVisible.value = false
-    })
-
+async function AddConfirm() {
+  AddFormData.value.location = AddFormData.value.location.join(' ')
+  await apiAddMachine(AddFormData.value)
+  AddFormData.value = {
+    machineId: '',
+    location: [], // 地区
+    status: '0', // 设备状态
+    pause: '0', // 开关状态
+    enableDevice: '0', // 是否启用
+    waterTank: '0', // 水箱是否加满
+    deviceTemperature: '0', // 设备温度
+    batteryLevel: '0', // 电池电量
+    totalWaterAddition: '0',// 总加水量
+    longitude: '', // 纬度
+    latitude: '' // 经度
+  }
+  AddDialogVisible.value = false
+  await getMachineList()
 }
 
 // 添加设备 -取消
@@ -236,7 +259,7 @@ function AddClose() {
 
 
 onMounted(() => {
-  getListData(true)
+  getMachineList()
 })
 </script>
 

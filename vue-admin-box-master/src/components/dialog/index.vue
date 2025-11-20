@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog :model-value="visible" :title="title" :width="width">
+        <el-dialog :model-value="visible" :title="title" :width="width" :before-close="close">
             <slot name="content"></slot>
             <div>
                 <el-button type="primary" @click="confirm">确认</el-button>
@@ -19,16 +19,15 @@ const prop = defineProps({
         default: '600px'
     }
 })
-const emit=defineEmits(['update:visible','confirm','close'])
+const emit = defineEmits(['update:visible', 'confirm', 'close'])
 
-function confirm(){
+function confirm() {
     emit('confirm')
 }
 
-function close(){
-    emit('update:visible',false)
+function close() {
+    emit('update:visible', false)
     emit('close')
-    
 }
 
 
