@@ -12,10 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -107,6 +104,105 @@ public class userController {
     }
 
 
+
+    // 根据open_id查询或自动创建用户
+    @PostMapping("/by-openid")
+    public ResponseEntity<ResponseResult> getUserByOpenId(@RequestBody Map<String, String> request) {
+        try {
+            String openId = request.get("openId");
+
+            // 参数验证
+            if (openId == null || openId.trim().isEmpty()) {
+                return ResponseUtils.businessError("openId不能为空");
+            }
+
+            // 查询用户是否存在
+            Users existingUser = userMapper.findByOpenId(openId);
+
+            if (existingUser != null) {
+                // 用户已存在，返回用户信息（隐藏密码）
+                existingUser.setUserPassword(null);
+
+                Map<String, Object> responseData = new HashMap<>();
+                responseData.put("user", existingUser);
+                responseData.put("isNewUser", false);
+                responseData.put("message", "用户已存在");
+
+                return ResponseUtils.ok(responseData);
+            } else {
+                // 用户不存在，自动创建新用户
+                return createNewUserByOpenId(openId);
+            }
+        } catch (Exception e) {
+            return ResponseUtils.serverError("查询用户失败: " + e.getMessage());
+        }
+    }
+
+    // 自动创建新用户的辅助方法
+    private ResponseEntity<ResponseResult> createNewUserByOpenId(String openId) {
+        try {
+            // 生成用户ID
+            String userId = "USER_" + System.currentTimeMillis() + "_" + UUID.randomUUID().toString().substring(0, 8);
+
+            // 生成随机用户名和密码
+            String randomUserName = generateRandomUserName();
+            String randomPassword = generateRandomPassword();
+
+            // 创建新用户
+            Users newUser = new Users();
+            newUser.setUserId(userId);
+            newUser.setOpenId(openId);
+            newUser.setUserName(randomUserName);
+            newUser.setUserPassword(randomPassword);
+            newUser.setBalance(0.0);
+
+            int result = userMapper.insert(newUser);
+
+            if (result > 0) {
+                // 创建成功，返回用户信息（隐藏密码）
+                newUser.setUserPassword(null);
+
+                Map<String, Object> responseData = new HashMap<>();
+                responseData.put("user", newUser);
+                responseData.put("isNewUser", true);
+                responseData.put("message", "新用户自动创建成功");
+
+                // 修复这里：使用HashMap而不是Map.of()
+                Map<String, String> credentials = new HashMap<>();
+                credentials.put("generatedUserName", randomUserName);
+                credentials.put("generatedPassword", randomPassword);
+                credentials.put("note", "请妥善保存自动生成的用户名和密码");
+
+                responseData.put("generatedCredentials", credentials);
+
+                return ResponseUtils.ok(responseData);
+            } else {
+                return ResponseUtils.businessError("自动创建用户失败");
+            }
+        } catch (Exception e) {
+            return ResponseUtils.serverError("自动创建用户失败: " + e.getMessage());
+        }
+    }
+
+    // 生成随机用户名
+    private String generateRandomUserName() {
+        String prefix = "用户";
+        String randomSuffix = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+        return prefix + randomSuffix;
+    }
+
+    // 生成随机密码
+    private String generateRandomPassword() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder password = new StringBuilder();
+        Random random = new Random();
+
+        for (int i = 0; i < 8; i++) {
+            password.append(chars.charAt(random.nextInt(chars.length())));
+        }
+
+        return password.toString();
+    }
     // 获取所有用户列表
     @GetMapping
     public ResponseEntity<ResponseResult> getAllUsers() {

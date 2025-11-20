@@ -82,7 +82,7 @@ public class machineController {
             }
 
             // 使用固定设备ID的主题
-            String controlTopic = "lampline";
+            String controlTopic = "abc";
 
             // 发送MQTT消息
             mqttMessageSender.sendMsg(controlTopic, messagePayload);
@@ -130,7 +130,7 @@ public class machineController {
             }
 
             // 使用固定设备ID的主题
-            String controlTopic = "lampline";
+            String controlTopic = "abc";
 
             // 发送MQTT消息
             mqttMessageSender.sendMsg(controlTopic, messagePayload);
@@ -153,6 +153,57 @@ public class machineController {
             return ResponseUtils.serverError("暂停控制命令发送失败: " + e.getMessage());
         }
     }
+
+    @PostMapping("/enable_device")
+    public ResponseEntity<ResponseResult> controlEnableDevice(@RequestParam String water) {
+        try {
+            String waterCommand = water.toLowerCase().trim();
+            String messagePayload;
+            String commandDescription;
+
+            // 根据water字段值确定发送的消息
+            switch (waterCommand) {
+                case "on":
+                case "1":
+                    messagePayload = "{@enable_device:1}";
+                    commandDescription = "开启设备启用";
+                    break;
+                case "off":
+                case "0":
+                    messagePayload = "{@enable_device:0}";
+                    commandDescription = "关闭设备启用";
+                    break;
+                default:
+                    return ResponseUtils.businessError("water参数值必须是 'on' 或 'off'");
+            }
+
+            // 使用固定设备ID的主题
+            String controlTopic = "abc";
+
+            // 发送MQTT消息
+            mqttMessageSender.sendMsg(controlTopic, messagePayload);
+
+            System.out.println("💧 发送启用控制命令 - 设备: ma1, 主题: " + controlTopic +
+                    ", 命令: " + messagePayload);
+
+            // 构建响应数据
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("machineId", "ma1");
+            responseData.put("topic", controlTopic);
+            responseData.put("payload", messagePayload);
+            responseData.put("command", waterCommand);
+            responseData.put("description", commandDescription);
+
+            return ResponseUtils.ok(responseData, commandDescription + "命令发送成功");
+
+        } catch (Exception e) {
+            System.err.println("❌ 设备启用控制命令发送失败: " + e.getMessage());
+            return ResponseUtils.serverError("设备启用控制命令发送失败: " + e.getMessage());
+        }
+    }
+
+
+
     //是否启用
     // 检查设备是否已启动
     @GetMapping("/enable_device/status")
