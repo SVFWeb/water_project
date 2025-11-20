@@ -1,7 +1,9 @@
 package com.example.demo02.controller;
 
+import com.example.demo02.domain.RechargeRecord;
 import com.example.demo02.domain.ResponseResult;
 import com.example.demo02.domain.Users;
+import com.example.demo02.mapper.RechargeRecordMapper;
 import com.example.demo02.mapper.UserMapper;
 import com.example.demo02.service.MqttMessageSender;
 import com.example.demo02.util.ResponseUtils;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -23,6 +26,8 @@ public class userController {
     private UserMapper userMapper;
     @Autowired
     private MqttMessageSender mqttMessageSender;
+    @Autowired
+    private RechargeRecordMapper rechargeRecordMapper;
 
     // 用户注册
     @PostMapping("/register")
@@ -303,35 +308,85 @@ public class userController {
     }
 
     // 用户余额充值
+// 用户余额充值（完整业务流程）
     @PatchMapping("/{userId}/recharge")
-    public ResponseEntity<ResponseResult> rechargeBalance(@PathVariable String userId, @RequestBody Map<String, Double> request) {
+    public ResponseEntity<ResponseResult> rechargeBalance(@PathVariable String userId, @RequestBody Map<String, Object> request) {
         try {
-            Double amount = request.get("amount");
+            Double amount = (Double) request.get("amount");
+            String remark = (String) request.get("remark");
+            String paymentMethod = (String) request.get("paymentMethod"); // 支付方式
+
+            // 参数验证
             if (amount == null || amount <= 0) {
                 return ResponseUtils.businessError("充值金额必须大于0");
             }
+            if (amount > 10000) {
+                return ResponseUtils.businessError("单次充值金额不能超过10000元");
+            }
 
             // 检查用户是否存在
-            if (userMapper.existsByUserId(userId) == 0) {
+            Users user = userMapper.findByUserId(userId);
+            if (user == null) {
                 return ResponseUtils.notFound();
             }
 
-            int result = userMapper.rechargeBalance(userId, amount);
-            if (result > 0) {
-                Users user = userMapper.findByUserId(userId);
-                Map<String, Object> responseData = new HashMap<>();
-                responseData.put("userId", userId);
-                responseData.put("rechargeAmount", amount);
-                responseData.put("newBalance", user.getBalance());
-                return ResponseUtils.ok(responseData, "余额充值成功");
-            } else {
+            // 生成唯一交易号
+            String transactionNo = "T" + System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+
+            // 1. 更新用户余额
+            int rechargeResult = userMapper.rechargeBalance(userId, amount);
+            if (rechargeResult <= 0) {
                 return ResponseUtils.businessError("余额充值失败");
             }
+
+            // 2. 创建充值记录
+            RechargeRecord rechargeRecord = new RechargeRecord();
+            rechargeRecord.setRecordId(transactionNo);
+            rechargeRecord.setUserId(userId);
+            rechargeRecord.setUserName(user.getUserName());
+            rechargeRecord.setAmount(amount);
+            rechargeRecord.setRechargeTime(LocalDateTime.now());
+            rechargeRecord.setStatus("success");
+
+            // 设置备注信息
+            StringBuilder recordRemark = new StringBuilder();
+            if (paymentMethod != null) {
+                recordRemark.append(paymentMethod).append("支付");
+            } else {
+                recordRemark.append("余额充值");
+            }
+            if (remark != null && !remark.trim().isEmpty()) {
+                recordRemark.append(" - ").append(remark);
+            }
+            rechargeRecord.setRemark(recordRemark.toString());
+
+            int recordResult = rechargeRecordMapper.insert(rechargeRecord);
+
+            // 3. 获取更新后的用户信息
+            Users updatedUser = userMapper.findByUserId(userId);
+
+            // 4. 构建响应数据
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("userId", userId);
+            responseData.put("userName", updatedUser.getUserName());
+            responseData.put("rechargeAmount", amount);
+            responseData.put("newBalance", updatedUser.getBalance());
+            responseData.put("transactionNo", transactionNo);
+            responseData.put("rechargeTime", rechargeRecord.getRechargeTime());
+            responseData.put("recordCreated", recordResult > 0);
+
+            // 记录操作日志
+            System.out.println("💰 用户充值成功 - 用户: " + userId +
+                    ", 金额: " + amount +
+                    ", 交易号: " + transactionNo);
+
+            return ResponseUtils.ok(responseData, "余额充值成功");
+
         } catch (Exception e) {
-            return ResponseUtils.serverError("服务器错误: " + e.getMessage());
+            System.err.println("❌ 用户充值异常 - 用户: " + userId + ", 错误: " + e.getMessage());
+            return ResponseUtils.serverError("充值失败: " + e.getMessage());
         }
     }
-
     // 用户余额扣款
     @PatchMapping("/{userId}/deduct")
     public ResponseEntity<ResponseResult> deductBalance(@PathVariable String userId, @RequestBody Map<String, Double> request) {
