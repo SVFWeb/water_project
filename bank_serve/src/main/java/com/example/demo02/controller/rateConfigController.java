@@ -66,6 +66,48 @@ public class rateConfigController {
         }
     }
 
+    // 根据设备ID修改费率配置（全字段更新）
+    // 根据设备ID修改费率配置（全字段更新）
+    @PutMapping("/by-machine/{machineId}")
+    public ResponseEntity<ResponseResult> updateRateConfigByMachineId(
+            @PathVariable String machineId,
+            @RequestBody RateConfig rateConfig) {
+        try {
+            // 检查设备是否有费率配置
+            if (rateConfigMapper.existsByMachineId(machineId) == 0) {
+                return ResponseUtils.businessError("该设备没有费率配置，请先创建费率配置");
+            }
+
+            // 确保URL中的设备ID与请求体中的设备ID一致
+            if (!machineId.equals(rateConfig.getMachineId())) {
+                return ResponseUtils.businessError("设备ID不匹配");
+            }
+
+            int result = rateConfigMapper.updateByMachineId(
+                    machineId,
+                    rateConfig.getRateDayRate(),
+                    rateConfig.getServiceFee(),
+                    rateConfig.getPricePerLiter()
+            );
+
+            if (result > 0) {
+                // 获取更新后的费率配置（返回列表，取第一个）
+                List<RateConfig> rateConfigs = rateConfigMapper.findByMachineId(machineId);
+                RateConfig updatedRateConfig = rateConfigs.isEmpty() ? null : rateConfigs.get(0);
+
+                Map<String, Object> responseData = new HashMap<>();
+                responseData.put("machineId", machineId);
+                responseData.put("rateConfig", updatedRateConfig);
+                return ResponseUtils.ok(responseData, "设备费率配置更新成功");
+            } else {
+                return ResponseUtils.businessError("设备费率配置更新失败");
+            }
+        } catch (Exception e) {
+            return ResponseUtils.serverError("服务器错误: " + e.getMessage());
+        }
+    }
+
+
     // 查询所有费率配置
     @GetMapping
     public ResponseEntity<ResponseResult> getAllRateConfigs() {

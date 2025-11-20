@@ -96,6 +96,17 @@ public interface MachineMapper extends BaseMapper<Machine> {
     @Select("SELECT * FROM machine WHERE enable_device = #{enableDevice}")
     List<Machine> findByEnableDevice(@Param("enableDevice") String enableDevice);
 
+    // 查询没有费率配置的设备
+    @Select("SELECT m.* FROM machine m LEFT JOIN rate_config rc ON m.machine_id = rc.machine_id WHERE rc.rate_id IS NULL")
+    List<Machine> findMachinesWithoutRateConfig();
+
+    // 根据费率标识查询设备
+    @Select("SELECT * FROM machine WHERE there_fee = #{thereFee}")
+    List<Machine> findByThereFee(@Param("thereFee") String thereFee);
+
+    // 查询没有费率配置的设备数量
+    @Select("SELECT COUNT(*) FROM machine m LEFT JOIN rate_config rc ON m.machine_id = rc.machine_id WHERE rc.rate_id IS NULL")
+    int countMachinesWithoutRateConfig();
 
 
 }

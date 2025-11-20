@@ -10,10 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/machine")
@@ -282,10 +280,282 @@ public class machineController {
         }
     }
 
-    // 创建错误响应辅助方法
-    private Map<String, String> createErrorResponse(String error) {
-        Map<String, String> response = new HashMap<>();
-        response.put("error", error);
-        return response;
+    // 修改设备信息（部分字段更新）
+    @PatchMapping("/{machineId}")
+    public ResponseEntity<ResponseResult> updateMachinePartial(
+            @PathVariable String machineId,
+            @RequestBody Map<String, Object> updateFields) {
+        try {
+            // 检查设备是否存在
+            if (machineMapper.existsByMachineId(machineId) == 0) {
+                return ResponseUtils.notFound();
+            }
+
+            // 获取现有设备信息
+            Machine existingMachine = machineMapper.findByMachineId(machineId);
+            if (existingMachine == null) {
+                return ResponseUtils.notFound();
+            }
+
+            // 更新传递的字段，保持其他字段不变
+            boolean hasUpdates = updateMachineFields(existingMachine, updateFields);
+
+            if (!hasUpdates) {
+                return ResponseUtils.businessError("没有提供有效的更新字段");
+            }
+
+            // 执行更新
+            int result = machineMapper.update(existingMachine);
+            if (result > 0) {
+                Map<String, Object> responseData = new HashMap<>();
+                responseData.put("machineId", machineId);
+                responseData.put("updatedFields", getUpdatedFieldNames(updateFields));
+                responseData.put("data", existingMachine);
+                return ResponseUtils.ok(responseData, "设备信息更新成功");
+            } else {
+                return ResponseUtils.businessError("设备信息更新失败");
+            }
+        } catch (Exception e) {
+            return ResponseUtils.serverError("服务器错误: " + e.getMessage());
+        }
     }
+
+    // 更新设备字段的辅助方法
+    private boolean updateMachineFields(Machine machine, Map<String, Object> updateFields) {
+        boolean hasUpdates = false;
+
+        // 设备名
+        if (updateFields.containsKey("location") && updateFields.get("location") != null) {
+            String location = updateFields.get("location").toString();
+            if (!location.trim().isEmpty()) {
+                machine.setLocation(location);
+                hasUpdates = true;
+            }
+        }
+
+        // 设备状态（默认离线）
+        if (updateFields.containsKey("status") && updateFields.get("status") != null) {
+            String status = updateFields.get("status").toString();
+            if (!status.trim().isEmpty()) {
+                machine.setStatus(status);
+                hasUpdates = true;
+            } else {
+                machine.setStatus("offline"); // 默认离线
+                hasUpdates = true;
+            }
+        } else {
+            // 如果没有传递状态字段，保持原状态不变
+        }
+
+        // 开关（默认关）
+        if (updateFields.containsKey("waterAddSwitch") && updateFields.get("waterAddSwitch") != null) {
+            String waterAddSwitch = updateFields.get("waterAddSwitch").toString();
+            if (!waterAddSwitch.trim().isEmpty()) {
+                machine.setWaterAddSwitch(waterAddSwitch);
+                hasUpdates = true;
+            } else {
+                machine.setWaterAddSwitch("0"); // 默认关
+                hasUpdates = true;
+            }
+        }
+
+        // 暂停状态
+        if (updateFields.containsKey("pause") && updateFields.get("pause") != null) {
+            String pause = updateFields.get("pause").toString();
+            if (!pause.trim().isEmpty()) {
+                machine.setPause(pause);
+                hasUpdates = true;
+            } else {
+                machine.setPause("0"); // 默认未暂停
+                hasUpdates = true;
+            }
+        }
+
+        // 设备启用状态
+        if (updateFields.containsKey("enableDevice") && updateFields.get("enableDevice") != null) {
+            String enableDevice = updateFields.get("enableDevice").toString();
+            if (!enableDevice.trim().isEmpty()) {
+                machine.setEnableDevice(enableDevice);
+                hasUpdates = true;
+            } else {
+                machine.setEnableDevice("1"); // 默认启用
+                hasUpdates = true;
+            }
+        }
+
+        // 水箱状态
+        if (updateFields.containsKey("waterTank") && updateFields.get("waterTank") != null) {
+            String waterTank = updateFields.get("waterTank").toString();
+            if (!waterTank.trim().isEmpty()) {
+                machine.setWaterTank(waterTank);
+                hasUpdates = true;
+            } else {
+                machine.setWaterTank("0"); // 默认不满
+                hasUpdates = true;
+            }
+        }
+
+        // 是否加满（默认否）
+        if (updateFields.containsKey("fillUp") && updateFields.get("fillUp") != null) {
+            String fillUp = updateFields.get("fillUp").toString();
+            if (!fillUp.trim().isEmpty()) {
+                machine.setFillUp(fillUp);
+                hasUpdates = true;
+            } else {
+                machine.setFillUp("0"); // 默认未加满
+                hasUpdates = true;
+            }
+        }
+
+        // 设备温度（默认为0）
+        if (updateFields.containsKey("deviceTemperature") && updateFields.get("deviceTemperature") != null) {
+            String deviceTemperature = updateFields.get("deviceTemperature").toString();
+            if (!deviceTemperature.trim().isEmpty()) {
+                machine.setDeviceTemperature(deviceTemperature);
+                hasUpdates = true;
+            } else {
+                machine.setDeviceTemperature("0"); // 默认0
+                hasUpdates = true;
+            }
+        }
+
+        // 电池电量（默认为0）
+        if (updateFields.containsKey("batteryLevel") && updateFields.get("batteryLevel") != null) {
+            String batteryLevel = updateFields.get("batteryLevel").toString();
+            if (!batteryLevel.trim().isEmpty()) {
+                machine.setBatteryLevel(batteryLevel);
+                hasUpdates = true;
+            } else {
+                machine.setBatteryLevel("0"); // 默认0
+                hasUpdates = true;
+            }
+        }
+
+        // 总加水量（默认0）
+        if (updateFields.containsKey("totalWaterAddition") && updateFields.get("totalWaterAddition") != null) {
+            try {
+                Object totalWaterAdditionObj = updateFields.get("totalWaterAddition");
+                if (totalWaterAdditionObj != null) {
+                    Double totalWaterAddition;
+                    if (totalWaterAdditionObj instanceof String) {
+                        totalWaterAddition = Double.parseDouble(totalWaterAdditionObj.toString());
+                    } else {
+                        totalWaterAddition = (Double) totalWaterAdditionObj;
+                    }
+                    machine.setTotalWaterAddition(totalWaterAddition);
+                    hasUpdates = true;
+                }
+            } catch (Exception e) {
+                machine.setTotalWaterAddition(0.0); // 解析失败时设为默认值0
+                hasUpdates = true;
+            }
+        }
+
+        // 经度（默认0）
+        if (updateFields.containsKey("longitude") && updateFields.get("longitude") != null) {
+            String longitude = updateFields.get("longitude").toString();
+            if (!longitude.trim().isEmpty()) {
+                machine.setLongitude(longitude);
+                hasUpdates = true;
+            } else {
+                machine.setLongitude("0.0"); // 默认0
+                hasUpdates = true;
+            }
+        }
+
+        // 纬度（默认0）
+        if (updateFields.containsKey("latitude") && updateFields.get("latitude") != null) {
+            String latitude = updateFields.get("latitude").toString();
+            if (!latitude.trim().isEmpty()) {
+                machine.setLatitude(latitude);
+                hasUpdates = true;
+            } else {
+                machine.setLatitude("0.0"); // 默认0
+                hasUpdates = true;
+            }
+        }
+
+        // 是否有费率
+        if (updateFields.containsKey("thereFee") && updateFields.get("thereFee") != null) {
+            String thereFee = updateFields.get("thereFee").toString();
+            if (!thereFee.trim().isEmpty()) {
+                machine.setThereFee(thereFee);
+                hasUpdates = true;
+            } else {
+                machine.setThereFee("0"); // 默认无费率
+                hasUpdates = true;
+            }
+        }
+
+        return hasUpdates;
+    }
+
+    // 获取更新的字段名称列表
+    private List<String> getUpdatedFieldNames(Map<String, Object> updateFields) {
+        return updateFields.keySet().stream()
+                .filter(key -> updateFields.get(key) != null)
+                .collect(Collectors.toList());
+    }
+
+    // 查询没有费率配置的设备
+    @GetMapping("/without-rates")
+    public ResponseEntity<ResponseResult> getMachinesWithoutRates(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        try {
+            // 参数验证
+            if (page < 1) page = 1;
+            if (pageSize < 1 || pageSize > 100) pageSize = 10;
+
+            // 获取所有没有费率配置的设备
+            List<Machine> allMachinesWithoutRates = machineMapper.findMachinesWithoutRateConfig();
+
+            // 手动分页
+            int totalCount = allMachinesWithoutRates.size();
+            int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+
+            if (totalCount == 0) {
+                Map<String, Object> emptyData = createEmptyPageData(page, pageSize);
+                emptyData.put("message", "所有设备都已配置费率");
+                return ResponseUtils.ok(emptyData);
+            }
+
+            if (page > totalPages) {
+                page = totalPages;
+            }
+
+            int fromIndex = (page - 1) * pageSize;
+            int toIndex = Math.min(fromIndex + pageSize, totalCount);
+            List<Machine> pageList = allMachinesWithoutRates.subList(fromIndex, toIndex);
+
+            // 构建响应数据
+            Map<String, Object> responseData = new HashMap<>();
+            responseData.put("list", pageList);
+            responseData.put("currentPage", page);
+            responseData.put("pageSize", pageSize);
+            responseData.put("totalCount", totalCount);
+            responseData.put("totalPages", totalPages);
+            responseData.put("hasNext", page < totalPages);
+            responseData.put("hasPrev", page > 1);
+
+            return ResponseUtils.ok(responseData, "查询到 " + totalCount + " 台设备未配置费率");
+        } catch (Exception e) {
+            return ResponseUtils.serverError("查询无费率设备失败: " + e.getMessage());
+        }
+    }
+    // 创建空分页数据的辅助方法
+    private Map<String, Object> createEmptyPageData(int page, int pageSize) {
+        Map<String, Object> pageData = new HashMap<>();
+        pageData.put("list", Collections.emptyList());
+        pageData.put("currentPage", page);
+        pageData.put("pageSize", pageSize);
+        pageData.put("totalCount", 0);
+        pageData.put("totalPages", 0);
+        pageData.put("hasNext", false);
+        pageData.put("hasPrev", false);
+        return pageData;
+    }
+
+
+
 }
