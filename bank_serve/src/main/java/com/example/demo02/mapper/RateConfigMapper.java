@@ -62,4 +62,28 @@ public interface RateConfigMapper extends BaseMapper<RateConfig> {
     // 统计费率配置数量
     @Select("SELECT COUNT(*) FROM rate_config")
     int countAll();
+
+    // 根据设备ID更新费率配置
+    @Update("UPDATE rate_config SET rate_day_rate = #{rateDayRate}, service_fee = #{serviceFee}, " +
+            "price_per_liter = #{pricePerLiter} WHERE machine_id = #{machineId}")
+    int updateByMachineId(@Param("machineId") String machineId,
+                          @Param("rateDayRate") String rateDayRate,
+                          @Param("serviceFee") Double serviceFee,
+                          @Param("pricePerLiter") Double pricePerLiter);
+
+
+
+    // 根据设备ID更新服务费
+    @Update("UPDATE rate_config SET service_fee = #{serviceFee} WHERE machine_id = #{machineId}")
+    int updateServiceFeeByMachineId(@Param("machineId") String machineId, @Param("serviceFee") Double serviceFee);
+
+    // 根据设备ID更新每升价格
+    @Update("UPDATE rate_config SET price_per_liter = #{pricePerLiter} WHERE machine_id = #{machineId}")
+    int updatePricePerLiterByMachineId(@Param("machineId") String machineId, @Param("pricePerLiter") Double pricePerLiter);
+
+    // 根据设备ID更新日费率
+    @Update("UPDATE rate_config SET rate_day_rate = #{rateDayRate} WHERE machine_id = #{machineId}")
+    int updateRateDayRateByMachineId(@Param("machineId") String machineId, @Param("rateDayRate") String rateDayRate);
+
+
 }
