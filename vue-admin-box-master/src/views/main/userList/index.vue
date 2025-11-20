@@ -39,24 +39,40 @@
         </el-table-column>
       </Table>
 
+
+
+
       <!-- 添加用户 -->
-      <el-dialog v-model="AddDialogVisible" title="添加用户" width="500px">
-        <el-form :model="AddFormData" :rules="AddRules" ref="AddRuleForm" label-width="120px"
-          style="margin-right:30px;">
-          <el-form-item label="用户名称" prop="userName">
-            <el-input v-model="AddFormData.userName" placeholder="请输入名称"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="AddFormData.password" placeholder="请输入密码" />
-          </el-form-item>
-        </el-form>
-        <div>
-          <el-button type="primary" @click="confirm">确认</el-button>
-          <el-button @click="close">取消</el-button>
-        </div>
-      </el-dialog>
+      <BaseDialog v-model:visible="AddUserDialog.visible.value" :title="'添加用户'" :width="'500px'" @confirm="confirm"
+        @close="close">
+        <template #content>
+          <el-form :model="FormData" :rules="rules" ref="AddRuleForm" label-width="120px" style="margin-right:30px;">
+            <el-form-item label="用户名称" prop="userName">
+              <el-input v-model="FormData.userName" placeholder="请输入名称" />
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <el-input v-model="FormData.password" placeholder="请输入密码" />
+            </el-form-item>
+          </el-form>
+        </template>
+      </BaseDialog>
 
-
+      <!-- 编辑用户 -->
+      <BaseDialog v-model:visible="EditUserDialog.visible.value" :title="'修改用户信息'" :width="'500px'">
+        <template #content>
+          <el-form :model="FormData" :rules="rules" ref="EditRuleForm" label-width="120px" style="margin-right:30px;">
+            <el-form-item label="用户名称" prop="userName">
+              <el-input v-model="FormData.userName" placeholder="请输入名称" />
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <el-input v-model="FormData.password" placeholder="请输入密码" />
+            </el-form-item>
+            <el-form-item label="金额" prop="money">
+              <el-input v-model="FormData.money" placeholder="请输入密码" />
+            </el-form-item>
+          </el-form>
+        </template>
+      </BaseDialog>
     </div>
   </div>
 </template>
@@ -64,48 +80,60 @@
 <script setup>
 import { ref, reactive } from "vue";
 import { getData, del, updateStatus } from "@/api/system/user";
+import BaseDialog from '@/components/dialog/index.vue'
 import { ElMessage } from "element-plus";
 import Table from "@/components/table/index.vue";
-import Layer from "./layer.vue";
 import { Plus, Delete, Search } from '@element-plus/icons'
+import useDialog from '@/hooks/useDialog.js'
 
-const AddRuleForm=ref()
-const AddDialogVisible = ref(false)
-const AddFormData = ref({
+const FormData = ref({
   userName: '',
-  password: ''
+  password: '',
+  money: ''
 })
-const AddRules = {
+const rules = {
   userName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+  money: [{ required: true, message: '请输入余额', trigger: 'blur' }],
 }
+
+
+// 添加用户弹出框
+const AddUserDialog = useDialog()
+const AddRuleForm = ref()
 // 添加用户
 function handleAdd() {
-  AddDialogVisible.value = true
+  AddUserDialog.open()
 }
 // 添加用户 -确认
-function confirm(){
-  AddRuleForm.value.validate((valid)=>{
-    if(valid){
-      AddDialogVisible.value = false
+function confirm() {
+  AddRuleForm.value.validate((valid) => {
+    if (valid) {
+
     }
   })
 }
 // 添加用户 -取消
-function close(){
-  AddDialogVisible.value = false
+function close() {
+
 }
+
+// 编辑用户弹出框
+const EditUserDialog = useDialog()
+const EditRuleForm = ref()
+
+// 编辑用户弹窗功能
+const handleEdit = (row) => {
+  EditUserDialog.open()
+}
+
+
 
 // 存储搜索用的数据
 const query = reactive({
   input: "",
 });
-// 弹窗控制器
-const layer = reactive({
-  show: false,
-  title: "新增",
-  showButton: true,
-});
+
 // 分页参数, 供table使用
 const page = reactive({
   index: 1,
@@ -113,13 +141,14 @@ const page = reactive({
   total: 0,
 });
 const loading = ref(true);
+// 表格数据
 const tableData = ref([]);
+// 批量删除数据
 const chooseData = ref([]);
 const handleSelectionChange = (val) => {
   chooseData.value = val;
 };
-// 获取表格数据
-// params <init> Boolean ，默认为false，用于判断是否需要初始化分页
+
 const getTableData = (init) => {
   loading.value = true
   if (init) {
@@ -152,12 +181,7 @@ const getTableData = (init) => {
 const handleDel = (data) => {
   console.log(1213123);
 }
-// 编辑弹窗功能
-const handleEdit = (row) => {
-  layer.title = "编辑数据";
-  layer.row = row;
-  layer.show = true;
-}
+
 
 getTableData(true)
 
