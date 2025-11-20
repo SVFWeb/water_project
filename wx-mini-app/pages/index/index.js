@@ -94,7 +94,6 @@ Page({
     wx.getStorage({
       key: 'userInfo',
       success:(res)=>{
-        console.log(res.data)
         const {balance} = res.data
         this.setData({
           balance:balance
