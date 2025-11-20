@@ -5,7 +5,18 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    machine_status:"离线",//设备在线情况
+    user_id:"",//用户id
+    machineNum:"001",//机器序号
+    rate_sum:0.27,//加水价格
+    price_per_liter:0.004,//水费
+    service_fee:0.266,//服务费
+    userBalance:0,//用户余额
+    water_yield:0,//可加水升数
+    machine_id:"0",//机器编号
+    device_temperature:0,//设备温度
+    battery_level:0,//电池电量
+    is_connect:0,//已连接设备？
   },
   // 返回上一页
   backTab(){
@@ -24,6 +35,37 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
+     // 获取本地缓存
+     wx.getStorage({
+      key: 'userInfo',
+      success:(res)=>{
+        console.log(res.data)
+        const {userId,balance} = res.data
+        this.setData({
+          user_id:userId,
+          userBalance:balance,
+          water_yield:(balance/this.data.rate_sum).toFixed(2)
+        })
+      }
+    })
+    // 获取机器信息
+    wx.request({
+      url: 'http://localhost:8080/machine/ma1',
+      method:"GET",
+      success:(res)=>{
+        console.log(res.data);
+        const {status,machineId,deviceTemperature,batteryLevel} = res.data.data;
+        this.setData({
+          machine_status:status,//设备在线情况
+          machine_id:machineId,//机器编号
+          device_temperature:deviceTemperature,//设备温度
+          battery_level:batteryLevel,//电池电量
+        })
+      },
+      fail:(res)=>{
+        console.log(res.data);
+      }
+    })
 
   },
 

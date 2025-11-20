@@ -59,7 +59,7 @@ public class TransactionController {
             int result = transactionMapper.insert(transaction);
             if (result > 0) {
                 //订单创建之后需要传递给mtqq打开开关的数据
-                mqttMessageSender.sendMsg("lampline","{@water_add_switch:1}");
+                mqttMessageSender.sendMsg("abc","{@water_add_switch:1}");
                 Map<String, Object> responseData = new HashMap<>();
                 responseData.put("transactionId", transaction.getTransactionId());
                 responseData.put("data", transaction);

@@ -6,6 +6,7 @@
 .userInfoBox{
   display: flex;
   align-items: center;
+  justify-content: space-evenly;
 }
 .userInfoBox>image{
   width: 150rpx;
@@ -42,12 +43,21 @@
   display: flex;
   align-items: center;
   color: #ffffff;
-  font-size: 28rpx;
+  font-size: 24rpx;
   font-weight: bold;
 }
 .userInfo-phone>image{
-  width: 40rpx;
-  height: 40rpx;
+  width: 35rpx;
+  height: 35rpx;
+  margin-right: 10rpx;
+}
+.userInfo-loginBtn{
+  padding: 20rpx 40rpx;
+  background-color: white;
+  color: #1296db;
+  font-weight: bolder;
+  border-radius: 15rpx;
+  box-shadow: 0 0 3px 5px rgba(88, 88, 88, 0.05);
 }
 .BalanceTopUp-box{
   margin-top: 40rpx;
@@ -91,7 +101,7 @@
   box-shadow: 0 0 3px 5px rgba(88, 88, 88, 0.05);
 }
 .userMenuBox{
-  padding: 30rpx 20rpx 20rpx 20rpx ;
+  padding: 30rpx 20rpx 200rpx 20rpx ;
 }
 .record-box{
   display: flex;
@@ -128,6 +138,10 @@
 .record-subtitle{
   color: #e9e9e9;
   font-size: 24rpx;
+}
+.userMenu-scroll-view{
+  margin-top: 50rpx;
+  height: 50vh;
 }
 .user-menu{
   display: flex;
