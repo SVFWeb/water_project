@@ -140,13 +140,22 @@
   color: #2c2c2c;
   font-size: 28rpx;
 }
-.machineInfo-connect-text-two{
+.machineInfo-connect-text-two-no{
   color: #2c2c2c;
   font-size: 28rpx;
 }
-.machineInfo-connect-text-two::before{
+.machineInfo-connect-text-two-yes{
+  color: #2c2c2c;
+  font-size: 28rpx;
+}
+.machineInfo-connect-text-two-no::before{
   content: "◉";
   color: #db1212;
+  font-size: 28rpx;
+}
+.machineInfo-connect-text-two-yes::before{
+  content: "◉";
+  color: #41db12;
   font-size: 28rpx;
 }
 .machineInfo-detailsBox{
@@ -184,23 +193,39 @@
   font-size: 28rpx;
   color: #2c2c2c;
 }
+.machineStartIngBox-box{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
 .machineStartIngBox{
   margin-top: 50rpx;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.machineStartIngBox>text{
-  width: 200rpx;
-  height: 200rpx;
-  background: linear-gradient(180deg, #1296db, #9ad9fc);
+.machineStartIngBox-btn1,.machineStartIngBox-btn2,.machineStartIngBox-btn3,.machineStartIngBox-btn4{
+  width: 150rpx;
+  height: 120rpx;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
-  font-size: 32rpx;
+  border-radius: 30rpx;
+  font-size: 28rpx;
   color: #ffffff;
   font-weight: bolder;
   box-shadow: 0 0 3px 10px rgba(rgb(0, 0, 0), rgb(0, 0, 0), rgb(0, 0, 0), 0.7);
   border: 5px solid #ffffff;
+}
+.machineStartIngBox-btn1{
+  background: linear-gradient(180deg, #12db3e, #9afcaf);
+}
+.machineStartIngBox-btn2{
+  background: linear-gradient(180deg, #1291db, #9ae5fc);
+}
+.machineStartIngBox-btn3{
+  background: linear-gradient(180deg, #dbb612, #fcf29a);
+}
+.machineStartIngBox-btn4{
+  background: linear-gradient(180deg, #db1212, #fc9a9a);
 }
