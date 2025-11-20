@@ -5,7 +5,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    orderSwiperIndex:1,//订单页的标题下标
+    orderSwiperIndex:0,//订单页的标题下标
   },
   //改变下标值
   changeOrderSwiperIndexOne(e){

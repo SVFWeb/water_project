@@ -2,7 +2,7 @@
 Page({
   data: {
     city: '南宁市', // 默认城市
-    balance:1.23,
+    balance:0.00,
     SwiperIndex:0
   },
     //改变下标值
@@ -57,11 +57,49 @@ Page({
     });
   },
   getLocationAndReverseGeocoder: function() {
-    
   },
+  // 页面进来一次就触发
   onShow() {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().updateSelected();
     }
-  }
+    wx.getStorage({
+      key: 'isLogin',
+      success:(res)=>{
+        if(!res.data){
+          this.setData({
+            balance:0.00,
+          })
+        }else{
+          // 获取本地缓存
+          wx.getStorage({
+            key: 'userInfo',
+            success:(res)=>{
+              const {balance} = res.data
+              this.setData({
+                balance:balance
+              })
+            }
+        })
+        }
+      }
+  })
+  
+  },
+   /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady() {
+   // 获取本地缓存
+    wx.getStorage({
+      key: 'userInfo',
+      success:(res)=>{
+        console.log(res.data)
+        const {balance} = res.data
+        this.setData({
+          balance:balance
+        })
+      }
+    })
+   },
 });

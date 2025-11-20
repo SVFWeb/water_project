@@ -2,15 +2,18 @@
 <view class="userBgBox">
   <view class="userInfoBox">
     <image src="/image/userDefault.jpeg" mode="scaleToFill"/>
-    <view class="userInfo-name-phone-more-box">
+    <view class="userInfo-name-phone-more-box" wx:if="{{is_login}}">
       <view class="userInfo-name-phone">
-        <text class="userInfo-name">被风吹过的夏天</text>
+        <text class="userInfo-name">{{user_name}}</text>
         <view class="userInfo-phone">
-          <image src="/image/phone.png" mode=""/>
-          <text>135****6373</text>
+          <image src="/image/ID(1).png" mode=""/>
+          <text>{{user_id}}</text>
         </view>
       </view>
       <image src="/image/more-white.png" mode="scaleToFill"/>
+    </view>
+    <view class="userInfo-loginBtn" bind:tap="userLogin"wx:if="{{!is_login}}">
+        {{is_login==false?"点击登录":"退出登录"}}
     </view>
   </view>
   <view class="BalanceTopUp-box">
@@ -27,11 +30,11 @@
 <!-- 多功能菜单 -->
 <view class="userMenuBox">
   <view class="record-box">
-    <view class="transaction-record">
+    <view class="transaction-record" bind:tap="GoToOrders">
       <text class="record-title">交易记录</text>
       <text class="record-subtitle">查看每一笔订单</text>
     </view>
-    <view class="payment-record">
+    <view class="payment-record" bind:tap="GoToOrdersTopUp">
       <text class="record-title">缴费记录</text>
       <text class="record-subtitle">查看每一笔充值</text>
     </view>
@@ -71,4 +74,12 @@
     </view>
     <image src="/image/more-8a.png" mode=""/>
   </view>
+  <view class="user-menu" bind:tap="userExitLogin">
+    <view class="user-menu-icon">
+      <image src="/image/exit.png" mode=""/>
+      <text>退出登录</text>
+    </view>
+    <image src="/image/more-8a.png" mode=""/>
+  </view>
+
 </view>
