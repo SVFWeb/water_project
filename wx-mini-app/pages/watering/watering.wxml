@@ -1,5 +1,5 @@
 <view class="waterMapBox">
-  <map longitude="{{longitude}}" latitude="{{latitude}}" markers="{{ markers}}" class="waterMap">
+  <map longitude="{{longitude}}" latitude="{{latitude}}" markers="{{ markers}}" class="waterMap" bindmarkertap="onMarkerTap">
   </map>
   <view class="mapTopShowDown">
   </view>

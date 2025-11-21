@@ -5,6 +5,12 @@ Page({
     balance:0.00,
     SwiperIndex:0
   },
+  //跳转到机器页
+  GoToMachine(e){
+    wx.switchTab({
+      url: '../watering/watering',
+    })
+  },
     //改变下标值
     changeSwiperIndexOne(e){
       this.setData({

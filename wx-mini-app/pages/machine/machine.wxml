@@ -74,24 +74,68 @@
       </view>
       <text>30升/分钟</text>
     </view>
+    <view class="machineInfo-details-contentBox">
+      <view class="machineInfo-details-content">
+        <image src="/image/speed.png" mode=""/>
+        <text>当前加水量</text>
+      </view>
+      <text>{{total_water_addition}}L</text>
+    </view>
   </view>
   <view class="machineInfo-connectBox">
     <image src="/image/lianjie.png" mode=""/>
     <text class="machineInfo-connect-text-one">设备连接状态：</text>
     <text class="{{is_connect==0?'machineInfo-connect-text-two-no':'machineInfo-connect-text-two-yes'}}">{{is_connect==0?'未连接':'已连接'}}</text>
+    <text class="connection-time-text" wx:if="{{is_connect==1}}">{{connectionTime}}</text>
   </view>
   <view class="machineStartIngBox-box">
     <view class="machineStartIngBox">
-      <text class="machineStartIngBox-btn1">连接设备</text>
+      <text class="machineStartIngBox-btn1"  bind:tap="connectedDevice">连接设备</text>
     </view>
-    <view class="machineStartIngBox">
+    <view class="machineStartIngBox" bind:tap="startAddingWater" >
       <text class="machineStartIngBox-btn2">开始加水</text>
     </view>
     <view class="machineStartIngBox">
-      <text class="machineStartIngBox-btn3">暂停设备</text>
+      <text class="machineStartIngBox-btn3" bind:tap="pauseDevice">暂停设备</text>
     </view>
     <view class="machineStartIngBox">
-      <text class="machineStartIngBox-btn4">结束加水</text>
+      <text class="machineStartIngBox-btn4" bind:tap="endAddingWater">结束加水</text>
+    </view>
+  </view>
+</view>
+
+<!-- 登录提示弹窗 -->
+<view wx:if="{{showLoginModal}}" class="login-modal">
+  <view class="modal-mask" bindtap="onCloseLoginModal"></view>
+  <view class="modal-content">
+    <view class="modal-header">
+      <text class="modal-title">登录提示</text>
+      <text class="modal-close" bindtap="onCloseLoginModal">×</text>
+    </view>
+    <view class="modal-body">
+      <text class="login-tip-text">请先登录后才能使用设备控制功能</text>
+    </view>
+    <view class="modal-footer">
+      <button class="btn-cancel" bindtap="onCloseLoginModal">取消</button>
+      <button class="btn-confirm" bindtap="onConfirmLogin">去登录</button>
+    </view>
+  </view>
+</view>
+<!-- 余额不足弹窗 -->
+<view wx:if="{{showBalanceModal}}" class="login-modal">
+  <view class="modal-mask" bindtap="onCloseBalanceModal"></view>
+  <view class="modal-content">
+    <view class="modal-header">
+      <text class="modal-title">余额不足</text>
+      <text class="modal-close" bindtap="onCloseBalanceModal">×</text>
+    </view>
+    <view class="modal-body">
+      <text class="login-tip-text">当前余额不足，请先充值</text>
+      <text class="balance-text">当前余额: {{userBalance}}元</text>
+    </view>
+    <view class="modal-footer">
+      <button class="btn-cancel" bindtap="onCloseBalanceModal">取消</button>
+      <button class="btn-confirm" bindtap="onConfirmRecharge">去充值</button>
     </view>
   </view>
 </view>

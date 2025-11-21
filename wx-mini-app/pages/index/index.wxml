@@ -49,7 +49,7 @@
     <swiper class="WaterLocation-swiper" current="{{SwiperIndex}}" bindchange="onSwiperChange">
       <swiper-item class="WaterLocation-swiper-item">
         <scroll-view scroll-y="true" class="WaterLocation-scroll-view">
-          <view class="WaterLocation-card">
+          <view class="WaterLocation-card" bind:tap="GoToMachine">
             <view class="WaterLocation-card-title">广西民族大学武鸣校区加水站</view>
             <view class="WaterLocation-card-subtitle">武鸣区发展大道1号109-1教室中</view>
             <view class="WaterLocation-card-price-box">
@@ -60,7 +60,7 @@
               </view>
             </view>
           </view>
-          <view class="WaterLocation-card">
+          <view class="WaterLocation-card" bind:tap="GoToMachine">
             <view class="WaterLocation-card-title">南宁市中心加水站</view>
             <view class="WaterLocation-card-subtitle">武鸣区发展大道1号109-1教室中</view>
             <view class="WaterLocation-card-price-box">
@@ -75,7 +75,7 @@
       </swiper-item>
       <swiper-item class="WaterLocation-swiper-item">
         <scroll-view scroll-y="true" class="WaterLocation-scroll-view">
-          <view class="WaterLocation-card">
+          <view class="WaterLocation-card" bind:tap="GoToMachine">
             <view class="WaterLocation-card-title">南宁市中心加水站</view>
             <view class="WaterLocation-card-subtitle">武鸣区发展大道1号109-1教室中</view>
             <view class="WaterLocation-card-price-box">
@@ -86,7 +86,7 @@
               </view>
             </view>
           </view>
-          <view class="WaterLocation-card">
+          <view class="WaterLocation-card" bind:tap="GoToMachine">
             <view class="WaterLocation-card-title">广西民族大学武鸣校区加水站</view>
             <view class="WaterLocation-card-subtitle">武鸣区发展大道1号109-1教室中</view>
             <view class="WaterLocation-card-price-box">

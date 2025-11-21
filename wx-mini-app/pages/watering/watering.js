@@ -22,6 +22,39 @@ Page({
     height:40,
     }]
   },
+    // 点击标记点
+    onMarkerTap: function(e) {
+      const markerId = e.markerId
+      const marker = this.data.markers.find(item => item.id === markerId)
+      
+      if (marker) {
+        wx.showActionSheet({
+          itemList: ['微信内置地图导航'],
+          success: (res) => {
+            if (res.tapIndex === 0) {
+              // 使用微信内置地图
+              wx.openLocation({
+                latitude: marker.latitude,
+                longitude: marker.longitude,
+                name: marker.title || '设备位置',
+                scale: 18
+              })
+            } else if (res.tapIndex === 1) {
+              // 复制坐标
+              wx.setClipboardData({
+                data: `${marker.latitude},${marker.longitude}`,
+                success: () => {
+                  wx.showToast({
+                    title: '坐标已复制',
+                    icon: 'success'
+                  })
+                }
+              })
+            }
+          }
+        })
+      }
+    },
 // 跳转到机器页面
   GoToMachine(e){
     wx.navigateTo({
