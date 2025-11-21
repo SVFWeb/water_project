@@ -111,7 +111,7 @@ public class machineController {
             return ResponseUtils.serverError("水控制命令发送失败: " + e.getMessage());
         }
     }
-    //暂停
+    //订单开始
     @PostMapping("/pause")
     public ResponseEntity<ResponseResult> controlPause(@RequestParam String water) {
         try {
@@ -124,12 +124,12 @@ public class machineController {
                 case "on":
                 case "1":
                     messagePayload = "{@pause:1}";
-                    commandDescription = "开启暂停";
+                    commandDescription = "开启订单开始";
                     break;
                 case "off":
                 case "0":
                     messagePayload = "{@pause:0}";
-                    commandDescription = "关闭暂停";
+                    commandDescription = "结束订单";
                     break;
                 default:
                     return ResponseUtils.businessError("water参数值必须是 'on' 或 'off'");
@@ -155,8 +155,8 @@ public class machineController {
             return ResponseUtils.ok(responseData, commandDescription + "命令发送成功");
 
         } catch (Exception e) {
-            System.err.println("❌ 暂停控制命令发送失败: " + e.getMessage());
-            return ResponseUtils.serverError("暂停控制命令发送失败: " + e.getMessage());
+            System.err.println("❌ 订单控制命令发送失败: " + e.getMessage());
+            return ResponseUtils.serverError("订单控制命令发送失败: " + e.getMessage());
         }
     }
 
@@ -173,20 +173,16 @@ public class machineController {
                 case "on":
                 case "1":
                     messagePayload = "{@enable_device:1}";
-                    commandDescription = "打开暂停";
+                    commandDescription = "设备开始";
                     break;
                 case "off":
                 case "0":
                     messagePayload = "{@enable_device:0}";
-                    commandDescription = "关闭暂停";
+                    commandDescription = "设备未启用";
                     break;
-                case "send":
-                case "2":
-                    messagePayload = "{@enable_device:2}";
-                    commandDescription = "结束订单";
-                    break;
+
                 default:
-                    return ResponseUtils.businessError("water参数值必须是 'on'、'off' 或 'send'");
+                    return ResponseUtils.businessError("water参数值必须是 'on'、'off'");
             }
 
             // 使用固定设备ID的主题
