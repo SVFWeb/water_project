@@ -58,6 +58,7 @@ public class machineController {
 
     //开关
     // 简单的水开关控制接口 - 使用固定设备ID
+    // 简单的水开关控制接口 - 使用固定设备ID
     @PostMapping("/water")
     public ResponseEntity<ResponseResult> controlWater(@RequestParam String water) {
         try {
@@ -77,8 +78,13 @@ public class machineController {
                     messagePayload = "{@water_add_switch:0}";
                     commandDescription = "关闭水开关";
                     break;
+                case "stop":
+                case "2":
+                    messagePayload = "{@water_add_switch:2}";
+                    commandDescription = "停止加水";
+                    break;
                 default:
-                    return ResponseUtils.businessError("water参数值必须是 'on' 或 'off'");
+                    return ResponseUtils.businessError("water参数值必须是 'on'、'off' 或 'stop'");
             }
 
             // 使用固定设备ID的主题
@@ -88,7 +94,7 @@ public class machineController {
             mqttMessageSender.sendMsg(controlTopic, messagePayload);
 
             System.out.println("💧 发送水控制命令 - 设备: ma1, 主题: " + controlTopic +
-                    ", 命令: " + messagePayload);
+                    ", 命令: " + messagePayload + ", 描述: " + commandDescription);
 
             // 构建响应数据
             Map<String, Object> responseData = new HashMap<>();
@@ -161,20 +167,26 @@ public class machineController {
             String messagePayload;
             String commandDescription;
 
+
             // 根据water字段值确定发送的消息
             switch (waterCommand) {
                 case "on":
                 case "1":
                     messagePayload = "{@enable_device:1}";
-                    commandDescription = "开启设备启用";
+                    commandDescription = "打开暂停";
                     break;
                 case "off":
                 case "0":
                     messagePayload = "{@enable_device:0}";
-                    commandDescription = "关闭设备启用";
+                    commandDescription = "关闭暂停";
+                    break;
+                case "send":
+                case "2":
+                    messagePayload = "{@enable_device:2}";
+                    commandDescription = "结束订单";
                     break;
                 default:
-                    return ResponseUtils.businessError("water参数值必须是 'on' 或 'off'");
+                    return ResponseUtils.businessError("water参数值必须是 'on'、'off' 或 'send'");
             }
 
             // 使用固定设备ID的主题
@@ -183,7 +195,7 @@ public class machineController {
             // 发送MQTT消息
             mqttMessageSender.sendMsg(controlTopic, messagePayload);
 
-            System.out.println("💧 发送启用控制命令 - 设备: ma1, 主题: " + controlTopic +
+            System.out.println(" 发送暂停控制命令 - 设备: ma1, 主题: " + controlTopic +
                     ", 命令: " + messagePayload);
 
             // 构建响应数据
@@ -197,7 +209,7 @@ public class machineController {
             return ResponseUtils.ok(responseData, commandDescription + "命令发送成功");
 
         } catch (Exception e) {
-            System.err.println("❌ 设备启用控制命令发送失败: " + e.getMessage());
+            System.err.println("❌ 设备暂停控制命令发送失败: " + e.getMessage());
             return ResponseUtils.serverError("设备启用控制命令发送失败: " + e.getMessage());
         }
     }
