@@ -182,6 +182,7 @@ const AddFormData = ref({
 // 处理弹窗关闭
 const handleClose = (done) => {
   done();
+  initAddFormData()
 };
 
 // 处理表单提交
@@ -255,6 +256,24 @@ function AddClose() {
       }
     })
 
+}
+
+// 初始化
+function initAddFormData() {
+  // 表单数据
+  AddFormData.value = {
+    machineId: '',
+    location: [], // 地区
+    status: '0', // 设备状态
+    pause: '0', // 开关状态
+    enableDevice: '0', // 是否启用
+    waterTank: '0', // 水箱是否加满
+    deviceTemperature: '0', // 设备温度
+    batteryLevel: '0', // 电池电量
+    totalWaterAddition: '0',// 总加水量
+    longitude: '', // 纬度
+    latitude: '' // 经度
+  }
 }
 
 

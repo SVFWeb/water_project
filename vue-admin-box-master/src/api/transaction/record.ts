@@ -15,3 +15,10 @@ export function apiDeleteTransactionRecordId(id: string) {
     method: 'DELETE'
   })
 }
+
+// 查询交易记录
+export function apiQueryTransactionRecordId(id: string) {
+  return request({
+    url: `/transaction/${id}`,
+  })
+}
