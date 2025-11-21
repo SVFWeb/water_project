@@ -20,13 +20,13 @@
       </div>
     </div>
     <div class="layout-container-table">
-      <Table ref="table" v-model:page="page" v-loading="loading" :showSelection="true" :data="tableData"
-        @getTableData="getTableData" @selection-change="handleSelectionChange">
-        <el-table-column prop="id" label="用户Id" align="center" width="80" />
-        <el-table-column prop="name" label="微信id" align="center" />
-        <el-table-column prop="nickName" label="用户昵称" align="center" />
-        <el-table-column prop="role" label="用户密码" align="center" />
-        <el-table-column prop="role" label="用户金额" align="center" />
+      <Table ref="table" v-model:page="page" v-loading="loading" showIndex :data="tableData"
+        @getTableData="getTableData">
+        <el-table-column prop="userId" label="用户Id" align="center" />
+        <el-table-column prop="openId" label="微信id" align="center" />
+        <el-table-column prop="userName" label="用户昵称" align="center" />
+        <el-table-column prop="userPassword" label="用户密码" align="center" />
+        <el-table-column prop="balance" label="用户金额" align="center" width="100" />
         <el-table-column :label="$t('message.common.handle')" align="center" fixed="right" width="200">
           <template #default="scope">
             <el-button @click="handleEdit(scope.row)">{{ $t("message.common.update") }}</el-button>
@@ -41,7 +41,6 @@
 
 
 
-
       <!-- 添加用户 -->
       <BaseDialog v-model:visible="AddUserDialog.visible.value" :title="'添加用户'" :width="'500px'" @confirm="confirm"
         @close="close">
@@ -50,8 +49,8 @@
             <el-form-item label="用户名称" prop="userName">
               <el-input v-model="FormData.userName" placeholder="请输入名称" />
             </el-form-item>
-            <el-form-item label="密码" prop="password">
-              <el-input v-model="FormData.password" placeholder="请输入密码" />
+            <el-form-item label="密码" prop="userPassword">
+              <el-input v-model="FormData.userPassword" placeholder="请输入密码" />
             </el-form-item>
           </el-form>
         </template>
@@ -64,11 +63,11 @@
             <el-form-item label="用户名称" prop="userName">
               <el-input v-model="FormData.userName" placeholder="请输入名称" />
             </el-form-item>
-            <el-form-item label="密码" prop="password">
-              <el-input v-model="FormData.password" placeholder="请输入密码" />
+            <el-form-item label="密码" prop="userPassword">
+              <el-input v-model="FormData.userPassword" placeholder="请输入密码" />
             </el-form-item>
-            <el-form-item label="金额" prop="money">
-              <el-input v-model="FormData.money" placeholder="请输入密码" />
+            <el-form-item label="金额" prop="balance">
+              <el-input v-model="FormData.balance" placeholder="请输入密码" />
             </el-form-item>
           </el-form>
         </template>
@@ -78,22 +77,23 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { getData, del, updateStatus } from "@/api/system/user";
 import BaseDialog from '@/components/dialog/index.vue'
 import { ElMessage } from "element-plus";
 import Table from "@/components/table/index.vue";
 import { Plus, Delete, Search } from '@element-plus/icons'
 import useDialog from '@/hooks/useDialog.js'
+import { apiGetUserList, apiAddUser } from '@/api/user/List.js'
 
 const FormData = ref({
   userName: '',
-  password: '',
-  money: ''
+  userPassword: '',
+  balance: ''
 })
 const rules = {
   userName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+  userPassword: [{ required: true, message: '请输入密码', trigger: 'blur' }],
   money: [{ required: true, message: '请输入余额', trigger: 'blur' }],
 }
 
@@ -107,15 +107,18 @@ function handleAdd() {
 }
 // 添加用户 -确认
 function confirm() {
-  AddRuleForm.value.validate((valid) => {
+  AddRuleForm.value.validate(async (valid) => {
     if (valid) {
-
+      await apiAddUser(FormData.value)
+      AddUserDialog.close()
+      await getUserList()
+      initFormData()
     }
   })
 }
 // 添加用户 -取消
 function close() {
-
+  initFormData()
 }
 
 // 编辑用户弹出框
@@ -125,6 +128,8 @@ const EditRuleForm = ref()
 // 编辑用户弹窗功能
 const handleEdit = (row) => {
   EditUserDialog.open()
+  FormData.value = row
+  
 }
 
 
@@ -182,6 +187,22 @@ const handleDel = (data) => {
   console.log(1213123);
 }
 
+async function getUserList() {
+  let res = await apiGetUserList()
+  tableData.value = res.data
+}
+
+function initFormData() {
+  FormData.value = {
+    userName: '',
+    userPassword: '',
+    money: ''
+  }
+}
+
+onMounted(() => {
+  getUserList()
+})
 
 getTableData(true)
 

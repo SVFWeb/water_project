@@ -85,7 +85,7 @@ const tableData = ref([])
 const page = reactive({
   index: 1,
   size: 10,
-  total: 10
+  total: 3
 })
 // 表格加载状态
 const loading = ref(true)

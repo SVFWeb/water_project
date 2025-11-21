@@ -213,8 +213,7 @@ public class userController {
     public ResponseEntity<ResponseResult> getAllUsers() {
         try {
             List<Users> users = userMapper.findAll();
-            // 不返回密码信息
-            users.forEach(user -> user.setUserPassword(null));
+
             return ResponseUtils.ok(users);
         } catch (Exception e) {
             return ResponseUtils.serverError("获取用户列表失败: " + e.getMessage());

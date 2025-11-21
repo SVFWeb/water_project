@@ -3,15 +3,14 @@
     <div class="layout-container-form flex space-between">
       <!-- 搜索 -->
       <div class="layout-container-form-search">
-        <el-input v-model="query.input" placeholder="请输入搜索的订单编号" @change="getTableData(true)"></el-input>
-        <el-button type="primary" :icon="Search" class="search-btn" @click="getTableData(true)">搜索</el-button>
+        <el-input v-model="query.input" placeholder="请输入搜索的订单编号" @change="getTableData"></el-input>
+        <el-button type="primary" :icon="Search" class="search-btn" @click="getTableData">搜索</el-button>
       </div>
     </div>
 
     <!-- 数据表格 -->
     <div class="layout-container-table">
-      <Table ref="table" v-model:page="page" v-loading="loading" :showIndex="true"
-        :data="tableData" @getTableData="getTableData">
+      <Table ref="table" v-model:page="page" v-loading="loading" showIndex :data="tableData">
         <el-table-column prop="transactionId" label="订单编号" align="center" />
         <el-table-column prop="userName" label="用户" align="center" />
         <el-table-column prop="machineId" label="设备" align="center" />
@@ -46,7 +45,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import dayjs from 'dayjs'
 import Table from '@/components/table/index.vue'
-import { apiGetTransactionRecord, apiDeleteTransactionRecordId } from '@/api/transaction/record'
+import { apiGetTransactionRecord, apiDeleteTransactionRecordId, apiQueryTransactionRecordId } from '@/api/transaction/record'
 import { Search } from '@element-plus/icons'
 // 表格数据
 const tableData = ref([])
@@ -65,6 +64,7 @@ const loading = ref(true)
 
 // 获取列表数据
 async function getTransactionRecord() {
+  loading.value = false
   const res = await apiGetTransactionRecord({
     page: page.index,
     pageSize: page.size,
@@ -72,25 +72,27 @@ async function getTransactionRecord() {
   tableData.value = res.data.list
 }
 
-// 获取表格数据
-const getTableData = () => {
+// 搜索
+const getTableData = async () => {
   loading.value = false
-}
+  let res = await apiQueryTransactionRecordId(query.input)
+  if (query.input === '') {
+    tableData.value = res.data.list
+  } else {
+    tableData.value = [res.data]
+  }
 
+}
 
 // 删除功能
 const handleDel = async (data) => {
   let res = await apiDeleteTransactionRecordId(data)
-  console.log(res);
-
   getTransactionRecord()
-
 }
 
 // 初始化数据
 onMounted(() => {
   getTransactionRecord()
-  getTableData()
 })
 </script>
 
