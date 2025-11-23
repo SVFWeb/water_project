@@ -21,7 +21,7 @@
 <!-- 多功能栏目 -->
 <view class="MultiFunctional">
   <view class="MultiFunctional-box">
-    <view class="MultiFunctional-item-1">
+    <view class="MultiFunctional-item-1" bind:tap="GoToRecharge">
       <image src="/image/chongzhi.png" mode=""/>
       <text>充值</text>
     </view>

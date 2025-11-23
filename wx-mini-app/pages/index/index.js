@@ -5,6 +5,12 @@ Page({
     balance:0.00,
     SwiperIndex:0
   },
+  //跳转到充值页
+  GoToRecharge(e){
+    wx.navigateTo({
+      url: '../recharge/recharge',
+    })
+  },
   //跳转到机器页
   GoToMachine(e){
     wx.switchTab({

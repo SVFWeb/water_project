@@ -459,8 +459,9 @@ Page({
         })
       } else {
         wx.showToast({
-          title: '您已暂停加水',
+          title: '取消暂停继续加水',
         })
+        
       }
     } else {
       wx.showToast({
