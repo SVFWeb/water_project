@@ -344,8 +344,9 @@ Page({
 
   connectToDevice: function() {
     if(this.data.is_connect==0){
+      // 订单开始
       wx.request({
-        url: 'http://localhost:8080/machine/pause',
+        url: 'http://localhost:8080/machine/enable_device',
         method: 'POST',
         header: {
           'content-type': 'application/x-www-form-urlencoded'
@@ -355,17 +356,19 @@ Page({
         },
         success: (res) => {
           if (res.data.code==200) {
-            wx.showToast({
-              title: '设备连接成功',
-              icon: 'success'
-            })
-            this.setData({ 
-              isLoading: false,
-              is_connect: 1
-            })
-            // 连接成功后开始计时和定时查询
-            this.startConnectionTimer()
-            this.startDeviceInfoTimer() // 新增：开始定时查询设备信息
+                wx.showToast({
+                  title: '设备连接成功',
+                  icon: 'success'
+                })
+                this.setData({ 
+                  isLoading: false,
+                  is_connect: 1
+                })
+                // 连接成功后开始计时和定时查询
+                this.startConnectionTimer()
+                this.startDeviceInfoTimer() // 新增：开始定时查询设备信息
+              
+
           } else {
             wx.showToast({
               title: res.data.message || '连接失败',
@@ -405,13 +408,27 @@ Page({
           },
           success:(res)=>{
             console.log(res.data)
-            wx.showToast({
-              title: "开始加水",
-              icon:'success'
+            // 第二个连接
+            wx.request({
+              url: 'http://localhost:8080/machine/pause',
+              method:"POST",
+              data:{
+                water:"on",
+              },
+              header: {
+                'content-type': 'application/x-www-form-urlencoded'
+              },
+              success:(res)=>{
+                wx.showToast({
+                  title: "开始加水",
+                  icon:'success'
+                })
+                this.setData({
+                  is_watering:1
+                })
+              }
             })
-            this.setData({
-              is_watering:1
-            })
+           
           },
           fail:(err)=>{
             console.log(err.data)
@@ -441,7 +458,7 @@ Page({
           url: 'http://localhost:8080/machine/water',
           method:"POST",
           data:{
-            water:"stop",
+            water:"off",
           },
           header: {
             'content-type': 'application/x-www-form-urlencoded'
@@ -461,7 +478,26 @@ Page({
         wx.showToast({
           title: '取消暂停继续加水',
         })
-        
+        wx.request({
+          url: 'http://localhost:8080/machine/water',
+          method:"POST",
+          data:{
+            water:"on",
+          },
+          header: {
+            'content-type': 'application/x-www-form-urlencoded'
+          },
+          success:(res)=>{
+            console.log(res.data)
+            wx.showToast({
+              title: "继续加水",
+              icon:'success'
+            })
+          },
+          fail:(err)=>{
+            console.log(err.data)
+          }
+        })
       }
     } else {
       wx.showToast({
@@ -537,10 +573,40 @@ Page({
           })
         }
       })
+      // 断开设备连接en
+      wx.request({
+        url: 'http://localhost:8080/machine/enable_device',
+        method: 'POST',
+        header: {
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        data:{
+          water:"off"
+        },
+        success: (res) => {
+          if (res.data.code==200) {
+            wx.showToast({
+              title: '设备断开连接',
+              icon: 'success'
+            })
+          } else {
+            wx.showToast({
+              title: res.data.message || '结束失败',
+              icon: 'error'
+            })
+          }
+        },
+        fail: (err) => {
+          wx.showToast({
+            title: '网络错误，请重试',
+            icon: 'error'
+          })
+        }
+      })
       wx.showLoading({
         title: '创建交易中...',
       });
-      let finalAmount = (this.data.total_water_addition*0.27).toFixed(2)
+      let finalAmount = ((this.data.total_water_addition*0.27)/1000).toFixed(2)
       const transactionData = {
         userId: this.data.user_id,
         machineId: this.data.machine_id,

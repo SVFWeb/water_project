@@ -24,7 +24,13 @@
       <image src="/image/user-balance.png" mode="scaleToFill"/>
       <view class="machineInfo-userbalance-title">
         <text class="machineInfo-userbalance-title-one">当前余额</text>
-        <text class="machineInfo-userbalance-title-two">{{userBalance}}</text>
+        <wxs module="filters">
+          var formatMoney = function(value) {
+            return (parseFloat(value) || 0).toFixed(2)
+          }
+          module.exports = formatMoney
+        </wxs>
+        <text class="machineInfo-userbalance-title-two">{{filters(userBalance)}}</text>
       </view>
     </view>
     <view class="machineInfo-userbalance">
@@ -79,7 +85,7 @@
         <image src="/image/speed.png" mode=""/>
         <text>当前加水量</text>
       </view>
-      <text>{{total_water_addition}}L</text>
+      <text>{{total_water_addition}}mL</text>
     </view>
   </view>
   <view class="machineInfo-connectBox">

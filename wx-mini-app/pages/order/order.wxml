@@ -27,7 +27,7 @@
               </view>
             </view>
           </view>
-          <view class="msgTip" wx:if="{{!UserTransactionList}}">
+          <view class="msgTip" wx:if="{{UserTransactionList}}">
             <text>{{msgTip}}...</text>
           </view>
         </scroll-view>
@@ -51,7 +51,7 @@
               </view>
             </view>
           </view>
-          <view class="msgTip" wx:if="{{!UserRechargeList}}">
+          <view class="msgTip" wx:if="{{UserRechargeList}}">
             <text>{{msgTip}}...</text>
           </view>
         </scroll-view>

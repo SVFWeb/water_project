@@ -27,7 +27,7 @@ spring:
     password: ""
     url: tcp://broker.emqx.io:1883
     subClientId: springboot_client_${random.uuid}
-    subTopic: lamp
+    subTopic: lamp/line
     pubClientId: springboot_pub_${random.uuid}
 
 mybatis-plus:

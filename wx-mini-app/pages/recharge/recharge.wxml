@@ -5,7 +5,13 @@
     <view class="rechargeUserBalanceBox">
       <view class="rechargeUserBalance-titleBox">
         <text class="rechargeUserBalance-title-one">账号余额</text>
-        <text class="rechargeUserBalance-title-two">{{userBalance}}</text>
+        <wxs module="filters">
+          var formatMoney = function(value) {
+            return (parseFloat(value) || 0).toFixed(2)
+          }
+          module.exports = formatMoney
+        </wxs>
+        <text class="rechargeUserBalance-title-two">{{filters(userBalance)}}</text>
       </view>
       <image src="/image/jinbi.png" mode="scaleToFill"/>
     </view>
