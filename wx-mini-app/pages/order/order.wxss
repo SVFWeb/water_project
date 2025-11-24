@@ -33,7 +33,7 @@
   border-radius: 15rpx;
 }
 .ordersMiddleBox{
-  padding: 20rpx;
+  padding: 20rpx 20rpx 200rpx 20rpx;
   height: 80vh;
   background: #f7f7f7;
   display: flex;
@@ -121,4 +121,11 @@
   background-color: #fff7e6;
   padding: 8rpx 16rpx;
   border-radius: 20rpx;
+}
+.msgTip{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  padding: 40rpx 20rpx;
 }

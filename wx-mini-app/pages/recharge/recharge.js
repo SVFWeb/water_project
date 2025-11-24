@@ -234,12 +234,14 @@ processPayment: function(amount, paymentMethod) {
 
   // 刷新用户余额
   refreshUserBalance: function() {
-    wx.getStorage({
-      key: 'userInfo',
-      success: (res) => {
-        const userInfo = res.data
-        this.setData({
-          userBalance: userInfo.balance || 0
+    wx.request({
+      url: 'http://localhost:8080/user/'+this.data.userId,
+      method:"GET",
+      success:(res)=>{
+        console.log(res.data.data)
+        wx.setStorage({
+          key:"userInfo",
+          data:res.data.data
         })
       }
     })

@@ -537,6 +537,67 @@ Page({
           })
         }
       })
+      wx.showLoading({
+        title: '创建交易中...',
+      });
+      let finalAmount = (this.data.total_water_addition*0.27).toFixed(2)
+      const transactionData = {
+        userId: this.data.user_id,
+        machineId: this.data.machine_id,
+        waterUnitPrice:"0.27",
+        totalLiters: this.data.total_water_addition,
+        finalAmount: finalAmount,
+      };
+      // 开始扣款
+      wx.request({
+        url: 'http://localhost:8080/user/'+this.data.user_id+'/deduct',
+        method:"PATCH",
+        header: {
+          'content-type': 'application/json'
+        },
+        data: {
+          amount:finalAmount
+        },
+        success: (res) => {
+          console.log(res.data)
+          wx.showToast({
+            title: res.data.data.message,
+          })
+        },
+        fail:(res)=>{
+          wx.showToast({
+            title: res.data,
+          })
+        }
+      })
+      // 产生交易记录
+      wx.request({
+        url: 'http://localhost:8080/transaction',
+        method:"POST",
+        header: {
+          'content-type': 'application/json'
+        },
+        data: transactionData,
+        success: (res) => {
+          wx.hideLoading();
+          console.log('创建交易响应:', res.data);
+          if (res.data.code === 200) {
+
+            wx.showModal({
+              title:'提示',
+              content:"消耗:"+res.data.data.data.totalLiters+"升，消费:"+res.data.data.data.finalAmount+"元",
+              success:(res)=>{
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                  this.refreshUserBalance();
+                } else if (res.cancel) {
+                  console.log('用户点击取消')
+                }
+              }
+            })
+          }
+      }
+      })
     } else {
       wx.showToast({
         title: '您还未连接设备',
@@ -561,6 +622,20 @@ Page({
       }
     })
   },
+   // 刷新用户余额
+   refreshUserBalance: function() {
+    wx.request({
+      url: 'http://localhost:8080/user/'+this.data.user_id,
+      method:"GET",
+      success:(res)=>{
+        console.log(res.data.data)
+        wx.setStorage({
+          key:"userInfo",
+          data:res.data.data
+        })
+      }
+    })
+  },
 
   /**
    * 生命周期函数--监听页面加载
@@ -577,7 +652,6 @@ Page({
     wx.getStorage({
       key: 'userInfo',
       success: (res) => {
-        console.log(res.data)
         const { userId, balance } = res.data
         this.setData({
           user_id: userId,

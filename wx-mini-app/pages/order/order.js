@@ -5,7 +5,11 @@ Page({
    * 页面的初始数据
    */
   data: {
+    msgTip:"暂无数据",//提示消息
+    user_id:"",
     orderSwiperIndex:0,//订单页的标题下标
+    UserTransactionList:[],//用户交易记录
+    UserRechargeList:[],//用户充值记录
   },
   //改变下标值
   changeOrderSwiperIndexOne(e){
@@ -31,7 +35,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-
+    
   },
 
   /**
@@ -48,6 +52,64 @@ Page({
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().updateSelected();
     }
+    wx.getStorage({
+      key:'isLogin',
+      success:(res)=>{
+        // 为true登录了
+        if(res.data){
+          // 获取用户id
+          wx.getStorage({
+            key: 'userInfo',
+            success:(res)=>{
+              let {userId} = res.data
+              this.setData({
+                user_id:userId
+              })
+              // 获取用户充值记录
+              wx.request({
+                url: 'http://localhost:8080/recharge-record/user/'+this.data.user_id,
+                method:"GET",
+                success:(res)=>{
+                  let UserRechargeList = [...res.data.data].reverse()
+                  this.setData({
+                    UserRechargeList:UserRechargeList
+                  })
+                },
+                fail:(err)=>{
+                  wx.showToast({
+                    title: err.data.msg,
+                  })
+                }
+              })
+              // 获取用户交易记录
+              wx.request({
+                url: 'http://localhost:8080/transaction/user/'+this.data.user_id,
+                method:"GET",
+                success:(res)=>{
+                  let UserTransactionList = [...res.data.data].reverse()
+                  this.setData({
+                    UserTransactionList:UserTransactionList
+                  })
+                },
+                fail:(err)=>{
+                  wx.showToast({
+                    title: err.data.msg,
+                  })
+                }
+              })
+            }
+          })
+        }else{
+          wx.showToast({
+            title: '请先登录',
+            icon:'error'
+          })
+          this.setData({
+            msgTip:"请先登录以获取数据"
+          })
+        }
+      }
+    })
   },
 
   /**
