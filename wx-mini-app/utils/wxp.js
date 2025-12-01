@@ -26,9 +26,19 @@ function promisifyWxRequest(options){
     })
   })
 }
+function getStorage(options){
+  return new Promise((resolve, reject) => {
+      wx.getStorage({
+          ...options,
+          success: resolve, // 成功直接 resolve
+          fail: reject     // 失败直接 reject
+      });
+  });
+}
 // 组织并导出函数
 const wxp = {
-  request: promisifyWxRequest
+  request: promisifyWxRequest,
+  getStorage:getStorage
   // 如果以后有其他工具函数，如 api.upload, api.login 等，也放在这里
 };
 
