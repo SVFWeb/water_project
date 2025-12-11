@@ -67,6 +67,12 @@ Component({
           success: (res) => {
             console.log(res)
             // 这里可以处理扫码结果，例如跳转到相应页面等
+            const machineID = res.result;
+
+            wx.navigateTo({
+              url: `/pages/machine/machine?id=${machineID}`
+            })
+
           },
           fail: (err) => {
             console.error(err)

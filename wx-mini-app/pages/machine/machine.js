@@ -334,9 +334,10 @@ Page({
    */
   async onLoad(options) {
     // 可以在这里初始化一些数据
+    const machineId = options.machineId || "ma1";
 
     //查机器数据
-    const machineData= await this.selectMachine();
+    const machineData= await this.selectMachine(machineId);
     this.setData({
       machine_status: machineData.status,
       machine_id: machineData.machineId,
@@ -427,7 +428,7 @@ Page({
 async selectMachine(e){
   try {
     const machine = await wxp.request({
-      url: 'http://localhost:8080/machine/ma1',
+      url: `http://localhost:8080/machine/${e}`,
       method: "GET",
      })
      console.log(machine.data);
@@ -572,7 +573,7 @@ async startMachinePolling() {
   while (this.data.is_polling) { 
       try {
           // 1. 调用查询接口
-          const machineData = await this.selectMachine();
+          const machineData = await this.selectMachine(this.data.machine_id);
           
           // 在 await 之后再次检查状态，避免在等待期间状态被修改后继续执行
           if (!this.data.is_polling) break; 
