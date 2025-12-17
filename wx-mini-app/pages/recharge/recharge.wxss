@@ -1,0 +1,303 @@
+/* pages/recharge/recharge.wxss */
+
+/* 页面容器 - 添加底部安全区域 */
+.page-container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding-bottom: 140rpx; /* 为底部按钮预留空间 */
+  box-sizing: border-box;
+}
+
+/* 页面顶部区域 */
+.rechargeTopBox{
+  padding: 100rpx 20rpx 20rpx 20rpx;
+  background: linear-gradient(-180deg, #2c2c2c, #515151);
+}
+
+/* 返回按钮 */
+.rechargeBack{
+  width: 50rpx;
+  height: 50rpx;
+}
+
+/* 用户余额区域 */
+.rechargeUserBalanceBox{
+  padding: 0 40rpx;
+  margin-top: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rechargeUserBalanceBox>image{
+  width: 250rpx;
+  height: 250rpx;
+}
+
+.rechargeUserBalance-titleBox{
+  height: 150rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+/* 辅助信息：余额标签 - 20rpx */
+.rechargeUserBalance-title-one{
+  font-size: 20rpx; /* 辅助信息 */
+  font-weight: 500;
+  color: #ffff;
+  letter-spacing: 1rpx;
+}
+
+/* 大标题：余额金额 - 40rpx */
+.rechargeUserBalance-title-two{
+  font-size: 40rpx; /* 大标题 */
+  font-weight: bold;
+  color: #ffff;
+}
+
+/* 中间内容区域 */
+.rechargeMiddleBox{
+  background-color: #ffffff;
+  border-radius: 20rpx 20rpx 0 0; /* 只设置上边圆角 */
+  margin-top: -30rpx;
+  position: relative;
+  z-index: 2;
+  /* 移除 min-height，让内容自然撑开 */
+}
+
+.recharge-container {
+  padding: 30rpx;
+  /* 移除 min-height */
+}
+
+/* 区块样式 */
+.section {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.06);
+}
+
+/* 小标题：区块标题 - 32rpx */
+.section-title {
+  font-size: 32rpx; /* 小标题 */
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 30rpx;
+}
+
+/* 金额网格布局 */
+.amount-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+}
+
+.amount-card {
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+  padding: 30rpx 20rpx;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.amount-card-active {
+  border-color: #07c160;
+  background: rgba(7, 193, 96, 0.05);
+}
+
+/* 正文：金额数字 - 28rpx */
+.amount-main {
+  font-size: 28rpx; /* 正文 */
+  font-weight: bold;
+  color: #333;
+  display: block;
+}
+
+.amount-card-active .amount-main {
+  color: #07c160;
+}
+
+/* 次要文字：赠送金额 - 24rpx */
+.amount-bonus {
+  font-size: 24rpx; /* 次要文字 */
+  color: #ff6b35;
+  display: block;
+  margin-top: 10rpx;
+}
+
+/* 自定义金额区域 */
+.custom-amount {
+  display: flex;
+  align-items: center;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+  padding: 0 30rpx;
+  height: 100rpx;
+  transition: all 0.3s;
+}
+
+.custom-amount:focus-within {
+  border-color: #07c160;
+}
+
+/* 正文：货币符号 - 28rpx */
+.currency-symbol {
+  font-size: 28rpx; /* 正文 */
+  color: #333;
+  margin-right: 20rpx;
+  font-weight: bold;
+}
+
+/* 正文：金额输入 - 28rpx */
+.amount-input {
+  flex: 1;
+  font-size: 28rpx; /* 正文 */
+  height: 100rpx;
+  font-weight: 500;
+}
+
+.amount-input::placeholder {
+  font-size: 28rpx; /* 正文 */
+  color: #cccccc;
+}
+
+/* 付款方式区域 */
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.payment-method {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+  transition: all 0.3s;
+}
+
+.payment-method-active {
+  border-color: #07c160;
+  background: rgba(7, 193, 96, 0.05);
+}
+
+.payment-icon {
+  width: 50rpx;
+  height: 50rpx;
+  margin-right: 20rpx;
+}
+
+/* 正文：付款方式名称 - 28rpx */
+.payment-name {
+  font-size: 28rpx; /* 正文 */
+  color: #333;
+  flex: 1;
+  font-weight: 500;
+}
+
+.payment-radio {
+  width: 40rpx;
+  height: 40rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.payment-method-active .payment-radio {
+  border-color: #07c160;
+}
+
+.radio-inner {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  background: transparent;
+  transition: all 0.3s;
+}
+
+.radio-inner-active {
+  background: #07c160;
+}
+
+/* 底部充值区域 - 修复定位问题 */
+.recharge-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 20rpx 30rpx;
+  box-shadow: 0 -4rpx 20rpx rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 9999; /* 确保在最上层 */
+  /* 添加安全区域适配 */
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+}
+
+.recharge-info {
+  flex: 1;
+}
+
+/* 辅助信息：金额标签 - 20rpx */
+.recharge-amount-label {
+  font-size: 20rpx; /* 辅助信息 */
+  color: #666;
+  display: block;
+}
+
+/* 中标题：充值金额 - 36rpx */
+.recharge-amount {
+  font-size: 36rpx; /* 中标题 */
+  font-weight: bold;
+  color: #07c160;
+  display: block;
+  margin-top: 10rpx;
+}
+
+/* 充值按钮 */
+.recharge-btn {
+  background: #07c160;
+  color: white;
+  border-radius: 50rpx;
+  height: 90rpx;
+  line-height: 90rpx;
+  font-size: 32rpx; /* 小标题 */
+  font-weight: bold;
+  padding: 0 60rpx;
+  margin: 0;
+  border: none;
+  outline: none;
+  box-shadow: 0 4rpx 12rpx rgba(7, 193, 96, 0.3);
+}
+
+.recharge-btn-disabled {
+  background: #cccccc;
+  color: #999999;
+  box-shadow: none;
+}
+
+.recharge-btn:not(.recharge-btn-disabled):active {
+  background: #06a350;
+  transform: scale(0.98);
+}
+
+/* 响应式调整 */
+@media (max-width: 375px) {
+  .amount-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .recharge-btn {
+    padding: 0 40rpx;
+  }
+}

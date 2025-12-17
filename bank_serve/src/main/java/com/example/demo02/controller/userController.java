@@ -311,9 +311,31 @@ public class userController {
     @PatchMapping("/{userId}/recharge")
     public ResponseEntity<ResponseResult> rechargeBalance(@PathVariable String userId, @RequestBody Map<String, Object> request) {
         try {
-            Double amount = (Double) request.get("amount");
+            // 更灵活的类型处理
+            Object amountObj = request.get("amount");
+            Double amount = null;
+
+            if (amountObj instanceof Integer) {
+                amount = ((Integer) amountObj).doubleValue();
+            } else if (amountObj instanceof Double) {
+                amount = (Double) amountObj;
+            } else if (amountObj instanceof String) {
+                // 处理字符串类型的数字
+                try {
+                    amount = Double.parseDouble((String) amountObj);
+                } catch (NumberFormatException e) {
+                    return ResponseUtils.businessError("充值金额格式错误");
+                }
+            } else if (amountObj instanceof Float) {
+                amount = ((Float) amountObj).doubleValue();
+            } else if (amountObj instanceof Long) {
+                amount = ((Long) amountObj).doubleValue();
+            } else {
+                return ResponseUtils.businessError("充值金额格式错误");
+            }
+
             String remark = (String) request.get("remark");
-            String paymentMethod = (String) request.get("paymentMethod"); // 支付方式
+            String paymentMethod = (String) request.get("paymentMethod");
 
             // 参数验证
             if (amount == null || amount <= 0) {

@@ -3,7 +3,14 @@ Page({
   data: {
     city: '南宁市', // 默认城市
     balance:0.00,
-    SwiperIndex:0
+    SwiperIndex:0,
+    user_id:""
+  },
+  //跳转到充值页
+  GoToRecharge(e){
+    wx.navigateTo({
+      url: '../recharge/recharge',
+    })
   },
   //跳转到机器页
   GoToMachine(e){
@@ -77,16 +84,16 @@ Page({
             balance:0.00,
           })
         }else{
-          // 获取本地缓存
           wx.getStorage({
-            key: 'userInfo',
+            key:"userInfo",
             success:(res)=>{
-              const {balance} = res.data
+              const {balance,userId} = res.data;
               this.setData({
-                balance:balance
+                balance:balance,
+                user_id:userId
               })
             }
-        })
+          })
         }
       }
   })
@@ -96,15 +103,5 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
-   // 获取本地缓存
-    wx.getStorage({
-      key: 'userInfo',
-      success:(res)=>{
-        const {balance} = res.data
-        this.setData({
-          balance:balance
-        })
-      }
-    })
    },
 });

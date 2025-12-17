@@ -24,7 +24,13 @@
       <image src="/image/user-balance.png" mode="scaleToFill"/>
       <view class="machineInfo-userbalance-title">
         <text class="machineInfo-userbalance-title-one">当前余额</text>
-        <text class="machineInfo-userbalance-title-two">{{userBalance}}</text>
+        <wxs module="filters">
+          var formatMoney = function(value) {
+            return (parseFloat(value) || 0).toFixed(2)
+          }
+          module.exports = formatMoney
+        </wxs>
+        <text class="machineInfo-userbalance-title-two">{{filters(userBalance)}}</text>
       </view>
     </view>
     <view class="machineInfo-userbalance">
@@ -79,14 +85,14 @@
         <image src="/image/speed.png" mode=""/>
         <text>当前加水量</text>
       </view>
-      <text>{{total_water_addition}}L</text>
+      <text>{{total_water_addition}}mL</text>
     </view>
   </view>
   <view class="machineInfo-connectBox">
     <image src="/image/lianjie.png" mode=""/>
     <text class="machineInfo-connect-text-one">设备连接状态：</text>
     <text class="{{is_connect==0?'machineInfo-connect-text-two-no':'machineInfo-connect-text-two-yes'}}">{{is_connect==0?'未连接':'已连接'}}</text>
-    <text class="connection-time-text" wx:if="{{is_connect==1}}">{{connectionTime}}</text>
+    <text class="connection-time-text" wx:if="{{is_connect==1}}">{{formattedTime}}</text>
   </view>
   <view class="machineStartIngBox-box">
     <view class="machineStartIngBox">

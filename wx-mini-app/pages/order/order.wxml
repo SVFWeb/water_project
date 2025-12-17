@@ -10,78 +10,49 @@
       <swiper-item class="ordersMiddle-swiper-item">
         <scroll-view scroll-y="true" class="ordersMiddle-scroll-view">
           <!-- 交易记录卡片 -->
-          <view class="ordersMiddle-list-card">
+          <view class="ordersMiddle-list-card" wx:for="{{UserTransactionList}}" wx:key="*this">
             <view class="order-card">
               <view class="order-header">
-                <text class="order-id">订单号: W202401151430001</text>
-                <text class="order-status completed">已完成</text>
+                <text class="order-id">订单号: {{item.transactionId}}</text>
+                <text class="order-status completed">{{item.orderStatus}}</text>
               </view>
               <view class="order-info">
-                <text class="machine">A001-城南物流园站</text>
-                <text class="time">2024-01-15 14:30:25</text>
+                <text class="machine">机器编号：{{item.machineId}}</text>
+                <text class="time">{{item.startTime}}</text>
               </view>
               <view class="order-details">
-                <text class="detail">用水量: 150升</text>
+                <text class="detail">用水量: {{item.totalLiters}}升</text>
                 <text class="detail">单价: 0.27元/升</text>
-                <text class="amount">40.50元</text>
+                <text class="amount">{{item.finalAmount}}元</text>
               </view>
             </view>
           </view>
-          
-          <view class="ordersMiddle-list-card">
-            <view class="order-card">
-              <view class="order-header">
-                <text class="order-id">订单号: W202401141105002</text>
-                <text class="order-status completed">已完成</text>
-              </view>
-              <view class="order-info">
-                <text class="machine">B003-城北加油站</text>
-                <text class="time">2024-01-14 11:05:42</text>
-              </view>
-              <view class="order-details">
-                <text class="detail">用水量: 80升</text>
-                <text class="detail">单价: 0.27元/升</text>
-                <text class="amount">21.60元</text>
-              </view>
-            </view>
+          <view class="msgTip" wx:if="{{UserTransactionList}}">
+            <text>{{msgTip}}...</text>
           </view>
         </scroll-view>
       </swiper-item>
       <swiper-item class="ordersMiddle-swiper-item">
         <scroll-view scroll-y="true" class="ordersMiddle-scroll-view">
           <!-- 充值记录卡片 -->
-          <view class="ordersMiddle-list-card">
+          <view class="ordersMiddle-list-card" wx:for="{{UserRechargeList}}" wx:key="*this">
             <view class="recharge-card">
               <view class="order-header">
-                <text class="order-id">充值单号: C202401101430001</text>
-                <text class="order-status completed">充值成功</text>
+                <text class="order-id">充值单号: {{item.recordId}}</text>
+                <text class="order-status completed">{{item.status=="success"?'充值成功':'充值失败'}}</text>
               </view>
               <view class="order-info">
-                <text class="time">2024-01-10 14:30:25</text>
-                <text class="payment">微信支付</text>
+                <text class="time">{{item.rechargeTime}}</text>
+                <text class="payment">{{item.remark}}</text>
               </view>
               <view class="recharge-details">
-                <text class="amount">100.00元</text>
-                <text class="bonus">赠送5.00元</text>
+                <text class="amount">{{item.amount}}元</text>
+                <text class="bonus">赠送0元</text>
               </view>
             </view>
           </view>
-          
-          <view class="ordersMiddle-list-card">
-            <view class="recharge-card">
-              <view class="order-header">
-                <text class="order-id">充值单号: C202401050920002</text>
-                <text class="order-status completed">充值成功</text>
-              </view>
-              <view class="order-info">
-                <text class="time">2024-01-05 09:20:15</text>
-                <text class="payment">支付宝</text>
-              </view>
-              <view class="recharge-details">
-                <text class="amount">200.00元</text>
-                <text class="bonus">赠送15.00元</text>
-              </view>
-            </view>
+          <view class="msgTip" wx:if="{{UserRechargeList}}">
+            <text>{{msgTip}}...</text>
           </view>
         </scroll-view>
       </swiper-item>

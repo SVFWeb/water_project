@@ -5,7 +5,8 @@
     "pages/watering/watering",
     "pages/order/order",
     "pages/user/user",
-    "pages/machine/machine"
+    "pages/machine/machine",
+    "pages/recharge/recharge"
   ],
   "window": {
     "navigationStyle": "custom"

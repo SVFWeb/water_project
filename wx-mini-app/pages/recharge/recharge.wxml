@@ -1,0 +1,101 @@
+<!-- 添加页面容器 -->
+<view class="page-container">
+  <view class="rechargeTopBox">
+    <image src="/image/back.png" mode="scaleToFill" bind:tap="backTab" class="rechargeBack"/>
+    <view class="rechargeUserBalanceBox">
+      <view class="rechargeUserBalance-titleBox">
+        <text class="rechargeUserBalance-title-one">账号余额</text>
+        <wxs module="filters">
+          var formatMoney = function(value) {
+            return (parseFloat(value) || 0).toFixed(2)
+          }
+          module.exports = formatMoney
+        </wxs>
+        <text class="rechargeUserBalance-title-two">{{filters(userBalance)}}</text>
+      </view>
+      <image src="/image/jinbi.png" mode="scaleToFill"/>
+    </view>
+  </view>
+
+  <view class="rechargeMiddleBox">
+    <!-- 网格布局版本 -->
+    <view class="recharge-container">
+      <view class="section">
+        <text class="section-title">选择充值金额</text>
+        <view class="amount-grid">
+          <block wx:for="{{amountList}}" wx:key="value">
+            <view 
+              class="amount-card {{selectedAmount === item.value ? 'amount-card-active' : ''}}"
+              bindtap="selectAmount"
+              data-amount="{{item.value}}"
+            >
+              <text class="amount-main">{{item.value}}元</text>
+              <text class="amount-bonus" wx:if="{{item.bonus}}">赠{{item.bonus}}元</text>
+            </view>
+          </block>
+        </view>
+      </view>
+
+      <!-- 自定义金额输入 -->
+      <view class="section">
+        <text class="section-title">自定义金额</text>
+        <view class="custom-amount">
+          <text class="currency-symbol">¥</text>
+          <input 
+            class="amount-input"
+            type="number"
+            placeholder="请输入充值金额"
+            value="{{customAmount}}"
+            bindinput="onCustomAmountInput"
+            bindfocus="onCustomAmountFocus"
+          />
+        </view>
+      </view>
+
+      <!-- 付款方式选择 -->
+      <view class="section">
+        <text class="section-title">选择付款方式</text>
+        <view class="payment-methods">
+          <view 
+            class="payment-method {{paymentMethod === 'wechat' ? 'payment-method-active' : ''}}"
+            bindtap="selectPaymentMethod"
+            data-method="wechat"
+          >
+            <image src="/image/wechat-pay.png" class="payment-icon"></image>
+            <text class="payment-name">微信支付</text>
+            <view class="payment-radio">
+              <view class="radio-inner {{paymentMethod === 'wechat' ? 'radio-inner-active' : ''}}"></view>
+            </view>
+          </view>
+          
+          <view 
+            class="payment-method {{paymentMethod === 'alipay' ? 'payment-method-active' : ''}}"
+            bindtap="selectPaymentMethod"
+            data-method="alipay"
+          >
+            <image src="/image/alipay.png" class="payment-icon"></image>
+            <text class="payment-name">支付宝</text>
+            <view class="payment-radio">
+              <view class="radio-inner {{paymentMethod === 'alipay' ? 'radio-inner-active' : ''}}"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 底部充值按钮 - 移到页面容器外部 -->
+<view class="recharge-bottom">
+  <view class="recharge-info">
+    <text class="recharge-amount-label">充值金额：</text>
+    <text class="recharge-amount">¥{{displayAmount}}</text>
+  </view>
+  <button 
+    class="recharge-btn {{!canRecharge ? 'recharge-btn-disabled' : ''}}"
+    bindtap="onRecharge"
+    disabled="{{!canRecharge}}"
+  >
+    立即充值
+  </button>
+</view>

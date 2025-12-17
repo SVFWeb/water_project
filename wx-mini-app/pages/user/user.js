@@ -123,7 +123,6 @@ Page({
    wx.getStorage({
     key: 'userInfo',
     success:(res)=>{
-      console.log(res.data)
       const {userId,userName} = res.data
       this.setData({
         user_name:userName,
